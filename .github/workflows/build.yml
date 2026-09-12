@@ -18,31 +18,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 启动容器但不自动跑构建脚本
-      - name: Start Coq ${{ matrix.coq_version }} container
-        id: container
-        uses: coq-community/docker-coq-action@v1
-        with:
-          coq_version: ${{ matrix.coq_version }}
-          # 空脚本，只用来起容器
-          script: true
-
-      # 进容器改权限（关键：必须在这个容器步里、coq_makefile 之前）
-      - name: Fix permissions inside container
-        run: |
-          docker exec ${{ steps.container.outputs.container_id }} sh -c "chmod -R a+u /github/workspace && chown -R coq:coq /github/workspace"
-
-      # 构建（不写 before_script）
       - name: Build with Coq ${{ matrix.coq_version }}
         uses: coq-community/docker-coq-action@v1
         with:
           coq_version: ${{ matrix.coq_version }}
-          container_id: ${{ steps.container.outputs.container_id }}
+          # 必须显式列出全部阶段，mustache 才逐个解析
+          custom_script: |
+            {{before_install}}
+            {{install}}
+            {{after_install}}
+            {{before_script}}
+            {{script}}
+            {{after_script}}
+            {{uninstall}}
+          before_script: |
+            startGroup "Workaround permission issue"
+            sudo chown -R coq:coq .
+            endGroup
           script: |
+            startGroup "gen makefile"
+            test -f _CoqProject || { echo "_CoqProject missing"; exit 1; }
             coq_makefile -f _CoqProject -o CoqMakefile
+            endGroup
+            startGroup "make all"
             make -f CoqMakefile all
+            endGroup
 
-      - name: Upload 8.20 artifacts
+      - name: Revert permissions
+        if: ${{ always() }}
+        run: sudo chown -R 1001:116 .
+
+      - name: Upload Coq 8.20 artifacts
         if: matrix.coq_version == '8.20'
         uses: actions/upload-artifact@v4
         with:
