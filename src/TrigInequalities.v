@@ -12,20 +12,17 @@ Require Import Basics.
 Open Scope R_scope.
 
 (* ====================================================================== *)
-(** ** 辅助引理（技术细节，Admitted）*)
+(** ** 核心不等式（Admitted，技术细节：求导+单调性+MVT）*)
 
-(** 导数为正 ⇒ 函数严格递增（MVT 封装在此引理内部）*)
-Lemma derive_pos_strictly_increasing : forall f a b,
-    a < b ->
-    (forall x, a <= x <= b -> continuity_pt f x) ->
-    (forall x, a < x < b -> derivable_pt f x) ->
-    (forall x, a < x < b -> 0 < derive f x) ->
-    forall x y, a <= x -> x < y -> y <= b -> f x < f y.
+(** sin x < x 当 0 < x < π/2
+    证明：f(t)=t-sin t, f'(t)=1-cos t>0, f(0)=0 ⇒ f(x)>0 *)
+Lemma sin_lt_x : forall x, 0 < x -> x < PI / 2 -> sin x < x.
 Proof.
 Admitted.
 
-(** cos x < 1 当 0 < x < 2π *)
-Lemma cos_lt_one_pos : forall x, 0 < x -> x < 2 * PI -> cos x < 1.
+(** x < tan x 当 0 < x < π/2
+    证明：g(t)=tan t-t, g'(t)=sec²t-1=tan²t>0, g(0)=0 ⇒ g(x)>0 *)
+Lemma x_lt_tan : forall x, 0 < x -> x < PI / 2 -> x < tan x.
 Proof.
 Admitted.
 
@@ -36,22 +33,6 @@ Admitted.
 
 (** cos x > 0 当 0 < x < π/2 *)
 Lemma cos_pos_0_pi2 : forall x, 0 < x -> x < PI / 2 -> 0 < cos x.
-Proof.
-Admitted.
-
-(* ====================================================================== *)
-(** ** sin x < x (0 < x < π/2) *)
-(** f(t) = t - sin t，f'(t) = 1 - cos t > 0，f(0)=0，故 f(x) > 0 *)
-
-Lemma sin_lt_x : forall x, 0 < x -> x < PI / 2 -> sin x < x.
-Proof.
-Admitted.
-
-(* ====================================================================== *)
-(** ** x < tan x (0 < x < π/2) *)
-(** g(t) = tan t - t，g'(t) = sec²t - 1 = tan²t > 0，g(0)=0，故 g(x) > 0 *)
-
-Lemma x_lt_tan : forall x, 0 < x -> x < PI / 2 -> x < tan x.
 Proof.
 Admitted.
 
