@@ -55,8 +55,8 @@ Lemma sum0_append_zero : forall (a : nat -> R) (m n : nat) (y : R),
 Proof.
   intros a m n y Hzero.
   induction n.
-  - replace (m + 0) with m by lia. reflexivity.
-  - replace (m + S n) with (S (m + n)) by lia.
+  - assert (H1 : (m + 0)%nat = m) by lia. rewrite H1. reflexivity.
+  - assert (H2 : (m + S n)%nat = S (m + n)) by lia. rewrite H2.
     simpl sum0. rewrite IHn.
     replace (a (m + n) * y^(m + n)) with 0.
     + ring.
