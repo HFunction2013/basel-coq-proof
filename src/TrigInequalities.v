@@ -45,7 +45,31 @@ Lemma cot_sq_lt_inv_sq_lt_csc_sq : forall x,
     0 < x -> x < PI / 2 ->
     (cot x)^2 < /x^2 /\ /x^2 < (1 / sin x)^2.
 Proof.
-Admitted.
+  intros x Hx1 Hx2.
+  assert (Hsin_pos : 0 < sin x) by (apply sin_pos_0_pi2; assumption).
+  assert (Hcos_pos : 0 < cos x) by (apply cos_pos_0_pi2; assumption).
+  assert (Hsin_lt_x : sin x < x) by (apply sin_lt_x; assumption).
+  assert (Hx_lt_tan : x < tan x) by (apply x_lt_tan; assumption).
+  assert (Hcot_def : cot x = cos x / sin x) by (unfold cot; field).
+  assert (Htan_def : tan x = sin x / cos x) by (unfold tan; field).
+  assert (Hcot_lt_inv : cot x < /x).
+  { rewrite Hcot_def, Htan_def in Hx_lt_tan.
+    assert (H : x * cos x < sin x).
+    { apply Rmult_lt_reg_l with (r := cos x); [lra |].
+      rewrite <- Hx_lt_tan. field. }
+    apply Rdiv_lt_lt; try lra.
+    apply Rmult_lt_reg_l with (r := sin x); [lra |].
+    rewrite <- H. field. }
+  assert (Hinv_lt_csc : /x < 1 / sin x).
+  { apply Rdiv_lt_lt; try lra.
+    apply Rmult_lt_reg_l with (r := x); [lra |].
+    rewrite <- Hsin_lt_x. field. }
+  assert (H1 : (cot x)^2 < /x^2).
+  { apply Rmult_lt_lt; lra. }
+  assert (H2 : /x^2 < (1 / sin x)^2).
+  { apply Rmult_lt_lt; lra. }
+  split; assumption.
+Qed.
 
 Corollary cot_sq_lt_inv_sq : forall x, 0 < x -> x < PI / 2 -> (cot x)^2 < /x^2.
 Proof. intros; destruct (cot_sq_lt_inv_sq_lt_csc_sq x H H0); lra. Qed.
