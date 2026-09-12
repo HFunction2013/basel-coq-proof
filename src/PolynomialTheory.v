@@ -49,6 +49,16 @@ Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
 Proof. Admitted.
 
+Lemma sum0_mult_y : forall (f : nat -> R) (n : nat) (y : R),
+    y * sum0 (fun i => f i * y^i) n =
+    sum0 (fun i => (match i with O => 0 | S j => f j end) * y^i) (S n).
+Proof.
+  intros f n y.
+  induction n.
+  - simpl. ring.
+  - simpl. rewrite IHn. ring.
+Qed.
+
 (** 常数是 0 次多项式 *)
 Lemma is_poly_const : forall c : R, is_poly O (fun _ => c).
 Proof.
@@ -98,7 +108,14 @@ Proof.
 Qed.
 
 Lemma is_poly_y_mult : forall (n : nat) P, is_poly n P -> is_poly (S n) (fun y => y * P y).
-Proof. Admitted.
+Proof.
+  intros n P HP.
+  destruct HP as [a Ha].
+  exists (fun i => match i with O => 0 | S j => a j end).
+  intro y.
+  rewrite Ha.
+  apply sum0_mult_y.
+Qed.
 
 Lemma is_poly_y_pow : forall k n P, is_poly n P -> is_poly (n + k) (fun y => y^k * P y).
 Proof. Admitted.
