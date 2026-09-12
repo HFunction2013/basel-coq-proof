@@ -91,7 +91,7 @@ Proof.
   intro k. induction k.
   - simpl. rewrite Rmult_0_l. apply sin_0.
   - replace (INR (S k) * PI) with (INR k * PI + PI).
-    + rewrite sin_add. rewrite IHk.
+    + rewrite sin_plus. rewrite IHk.
       rewrite cos_PI. rewrite sin_PI. ring.
     + rewrite S_INR. ring.
 Qed.
