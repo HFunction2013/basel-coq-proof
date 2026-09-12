@@ -101,7 +101,27 @@ Proof. Admitted.
 
 Lemma Q_roots : forall (n : nat) (k : nat), 1 <= k <= n ->
     Q n (sin (INR k * PI / (2 * INR n + 1))^2) = 0.
-Proof. Admitted.
+Proof.
+  intros n k Hk.
+  set (theta := INR k * PI / (2 * INR n + 1)).
+  assert (Hpos : 0 < 2 * INR n + 1) by lra.
+  assert (H1 : (2 * INR n + 1) * theta = INR k * PI).
+  { unfold theta. field. lra. }
+  assert (H2 : sin ((2 * INR n + 1) * theta) = 0).
+  { rewrite H1. apply sin_nat_pi. }
+  assert (H3 : sin ((2 * INR n + 1) * theta) = sin theta * Q n (sin theta^2)).
+  { apply sin_multiple_angle. }
+  assert (H4 : sin theta * Q n (sin theta^2) = 0).
+  { rewrite <- H3. exact H2. }
+  assert (H5 : 0 < theta).
+  { unfold theta. apply Rdiv_lt_0_compat; lra. }
+  assert (H6 : theta < PI / 2).
+  { unfold theta. apply Rdiv_lt_reg_l with (r := 2 * INR n + 1); [lra | lra]. }
+  assert (H7 : 0 < sin theta) by (apply sin_pos_0_pi2; assumption).
+  assert (H8 : Q n (sin theta^2) = 0).
+  { apply (Rmult_eq_reg_l _ _ _ H7). exact H4. }
+  exact H8.
+Qed.
 
 (* ====================================================================== *)
 (** ** Q_n, R_n 的一次项系数（联合归纳）*)
