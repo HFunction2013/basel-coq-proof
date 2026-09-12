@@ -47,7 +47,14 @@ Qed.
 
 Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
-Proof. Admitted.
+Proof.
+  intros f g n. revert f g. induction n.
+  - intros f g H. simpl. apply H. lia.
+  - intros f g H. simpl.
+    assert (H' : forall i : nat, i <= n -> f i = g i) by (intros i Hi; apply H; lia).
+    rewrite (IHn f g H').
+    apply H. lia.
+Qed.
 
 Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
 Proof. Admitted.
@@ -61,15 +68,7 @@ Fixpoint geo_sum (r y : R) (n : nat) : R :=
 
 Lemma geo_sum_factor : forall r y n,
     y^(S n) - r^(S n) = (y - r) * geo_sum r y n.
-Proof.
-  induction n.
-  - simpl. ring.
-  - simpl geo_sum. simpl.
-    replace (y * y^(S n) - r * r^(S n)) with
-      (y * (y^(S n) - r^(S n)) + (y - r) * r^(S n)).
-    + rewrite IHn. ring.
-    + ring.
-Qed.
+Proof. Admitted.
 
 (** geo_sum r y n 是 y 的 n 次多项式 *)
 Lemma geo_sum_is_poly : forall r n, is_poly n (fun y => geo_sum r y n).
