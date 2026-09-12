@@ -39,16 +39,28 @@ Proof. Admitted.
 
 Corollary sin_multiple_angle : forall (n : nat) theta,
     sin ((2 * INR n + 1) * theta) = sin theta * Q n (sin theta^2).
-Proof. Admitted.
+Proof.
+  intros n theta.
+  destruct (sin_cos_multiple_angle n theta) as [H1 _].
+  exact H1.
+Qed.
 
 (* ====================================================================== *)
 (** ** Q_n(0) 和 R_n(0) *)
 
 Lemma R_at_zero : forall (n : nat), Rpoly n 0 = 1.
-Proof. Admitted.
+Proof.
+  intro n. induction n.
+  - simpl. ring.
+  - simpl. rewrite IHn. ring.
+Qed.
 
 Lemma Q_at_zero : forall (n : nat), Q n 0 = 2 * INR n + 1.
-Proof. Admitted.
+Proof.
+  intro n. induction n.
+  - simpl. ring.
+  - simpl. rewrite IHn. rewrite R_at_zero. ring.
+Qed.
 
 (* ====================================================================== *)
 (** ** Q_n, R_n 都是多项式 *)
@@ -57,10 +69,14 @@ Lemma Q_R_is_poly : forall (n : nat), is_poly n (Q n) /\ is_poly n (Rpoly n).
 Proof. Admitted.
 
 Corollary Q_is_poly : forall (n : nat), is_poly n (Q n).
-Proof. Admitted.
+Proof.
+  intro n. destruct (Q_R_is_poly n) as [H1 _]. exact H1.
+Qed.
 
 Corollary R_is_poly : forall (n : nat), is_poly n (Rpoly n).
-Proof. Admitted.
+Proof.
+  intro n. destruct (Q_R_is_poly n) as [_ H2]. exact H2.
+Qed.
 
 (* ====================================================================== *)
 (** ** Q_n 的根 *)
@@ -92,4 +108,7 @@ Corollary Q_coeff_formula : forall (n : nat), exists Tq,
     (forall y, Q n y = (2*INR n+1) +
         (-2*INR n*(INR n+1)*(2*INR n+1)/3)*y + y^2*Tq y) /\
     is_poly n Tq.
-Proof. Admitted.
+Proof.
+  intro n. destruct (Q_R_coeff n) as [[Tq H1] _].
+  exists Tq. exact H1.
+Qed.

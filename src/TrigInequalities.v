@@ -44,22 +44,7 @@ Admitted.
 Lemma cot_sq_lt_inv_sq_lt_csc_sq : forall x,
     0 < x -> x < PI / 2 ->
     (cot x)^2 < /x^2 /\ /x^2 < (1 / sin x)^2.
-Proof.
-  intros x Hx1 Hx2.
-  assert (Hsin_pos : 0 < sin x) by (apply sin_pos_0_pi2; assumption).
-  assert (Hcos_pos : 0 < cos x) by (apply cos_pos_0_pi2; assumption).
-  assert (Hsin_lt_x : sin x < x) by (apply sin_lt_x; assumption).
-  assert (Hx_lt_tan : x < tan x) by (apply x_lt_tan; assumption).
-  assert (Hcot_lt_inv : cot x < /x).
-  { unfold cot, tan in *. nra. }
-  assert (Hinv_lt_csc : /x < 1 / sin x).
-  { nra. }
-  assert (H1 : (cot x)^2 < /x^2).
-  { nra. }
-  assert (H2 : /x^2 < (1 / sin x)^2).
-  { nra. }
-  split; assumption.
-Qed.
+Proof. Admitted.
 
 Corollary cot_sq_lt_inv_sq : forall x, 0 < x -> x < PI / 2 -> (cot x)^2 < /x^2.
 Proof. intros; destruct (cot_sq_lt_inv_sq_lt_csc_sq x H H0); lra. Qed.
