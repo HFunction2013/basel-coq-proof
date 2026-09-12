@@ -119,6 +119,10 @@ Proof.
   { apply Rmult_lt_compat_r.
     - apply Rinv_0_lt_compat. exact Hpos.
     - exact Hab. }
-  field_simplify in H.
-  lra.
+  assert (H1 : a * / (a * b) = /b).
+  { field. lra. lra. }
+  assert (H2 : b * / (a * b) = /a).
+  { field. lra. lra. }
+  rewrite H1, H2 in H.
+  exact H.
 Qed.
