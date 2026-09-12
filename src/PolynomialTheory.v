@@ -69,13 +69,13 @@ Proof.
   set (b := fun i => if Nat.leb i m then a i else 0).
   exists b.
   intros y.
-  have Hbm : forall i : nat, i <= m -> b i = a i.
+  assert Hbm : forall i : nat, i <= m -> b i = a i.
   { intros i Hi; unfold b; rewrite (Nat.leb_correct i m Hi); reflexivity. }
-  have Hbg : forall i : nat, m < i -> b i = 0.
+  assert Hbg : forall i : nat, m < i -> b i = 0.
   { intros i Hi; unfold b; rewrite (Nat.leb_gt i m Hi); reflexivity. }
-  have H1 : sum0 (fun i => b i * y^i) (m + n) = sum0 (fun i => b i * y^i) m.
+  assert H1 : sum0 (fun i => b i * y^i) (m + n) = sum0 (fun i => b i * y^i) m.
   { apply sum0_append_zero. intros i Hi; apply Hbg; lra. }
-  have H2 : sum0 (fun i => b i * y^i) m = sum0 (fun i => a i * y^i) m.
+  assert H2 : sum0 (fun i => b i * y^i) m = sum0 (fun i => a i * y^i) m.
   { apply sum0_ext; intros i Hi; rewrite Hbm; trivial. }
   rewrite H1, H2. apply Ha.
 Qed.
@@ -104,7 +104,7 @@ Lemma is_poly_minus : forall (n : nat) P Q,
 Proof.
   intros n P Q HP HQ.
   assert (H : is_poly n (fun y => P y + (-Q y))) by (apply is_poly_plus; [exact HP | apply is_poly_neg; exact HQ]).
-  have H2 : (fun y : R => P y + (-Q y)) = (fun y : R => P y - Q y).
+  assert H2 : (fun y : R => P y + (-Q y)) = (fun y : R => P y - Q y).
   { extensionality y; ring. }
   rewrite H2 in H. exact H.
 Qed.
@@ -125,7 +125,7 @@ Proof.
   set (b := fun i => match i with O => 0 | S j => a j end).
   exists b.
   intros y.
-  have H : sum0 (fun i => b i * y^i) (S n) = y * sum0 (fun i => a i * y^i) n.
+  assert H : sum0 (fun i => b i * y^i) (S n) = y * sum0 (fun i => a i * y^i) n.
   { induction n.
     - simpl; unfold b; simpl; ring.
     - simpl sum0. unfold b at 1; simpl. rewrite IHn. ring. }
@@ -176,9 +176,9 @@ Proof.
   induction n.
   - simpl; apply is_poly_const.
   - intros r. simpl geo_sum.
-    have H1 : is_poly (S n) (fun y : R => y * geo_sum r y n).
+    assert H1 : is_poly (S n) (fun y : R => y * geo_sum r y n).
     { apply is_poly_y_mult. apply IHn. }
-    have H2 : is_poly (S n) (fun _ : R => r^(S n)).
+    assert H2 : is_poly (S n) (fun _ : R => r^(S n)).
     { apply is_poly_weaken with (m := O) (n := S n). apply is_poly_const. }
     apply is_poly_plus; exact H1 || exact H2.
 Qed.
