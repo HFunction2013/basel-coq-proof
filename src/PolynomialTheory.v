@@ -58,9 +58,9 @@ Proof.
   - assert (H1 : (m + 0)%nat = m) by lia. rewrite H1. reflexivity.
   - assert (H2 : (m + S n)%nat = S (m + n)) by lia. rewrite H2.
     simpl sum0. rewrite IHn.
-    replace (a (m + n) * y^(m + n)) with 0.
+    replace (a ((m + n)%nat) * y^(m + n)) with 0.
     + ring.
-    + assert (H : a (m + n) = 0) by (apply Hzero; lia).
+    + assert (H : a ((m + n)%nat) = 0) by (apply Hzero; lia).
       rewrite H. ring.
 Qed.
 
