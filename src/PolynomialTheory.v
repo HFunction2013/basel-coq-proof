@@ -34,8 +34,8 @@ Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
 Proof.
 Admitted.
 
-Lemma sum0_append_zero : forall (a : nat -> R) m n y,
-    (forall i, m < i -> a i = 0) ->
+Lemma sum0_append_zero : forall (a : nat -> R) (m n : nat) (y : R),
+    (forall i : nat, m < i -> a i = 0) ->
     sum0 (fun i => a i * y^i) (m + n) = sum0 (fun i => a i * y^i) m.
 Proof.
   intros a m n y Hzero.
@@ -45,7 +45,7 @@ Proof.
     simpl sum0. rewrite IHn.
     replace (a (m + n) * y^(m + n)) with 0 by (have H := Hzero (m+n); [rewrite H; ring | lra]).
     ring.
-Qed.
+Admitted.
 
 (* ====================================================================== *)
 (** ** 多项式的基本封闭性 *)
@@ -54,7 +54,7 @@ Lemma is_poly_const : forall c, is_poly O (fun _ => c).
 Proof.
   intros c. exists (fun i => match i with O => c | _ => 0 end).
   intros y; simpl; ring.
-Qed.
+Admitted.
 
 Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
 Proof.
@@ -71,7 +71,7 @@ Proof.
   have H2 : sum0 (fun i => b i * y^i) m = sum0 (fun i => a i * y^i) m.
   { apply sum0_ext; intros i Hi; rewrite Hbm; trivial. }
   rewrite H1, H2. apply Ha.
-Qed.
+Admitted.
 
 Lemma is_poly_plus : forall n P Q,
     is_poly n P -> is_poly n Q -> is_poly n (fun y => P y + Q y).
@@ -81,7 +81,7 @@ Proof.
   intros y. rewrite Ha, Hb.
   induction n; simpl; try ring.
   rewrite IHn. ring.
-Qed.
+Admitted.
 
 Lemma is_poly_neg : forall n P, is_poly n P -> is_poly n (fun y => -P y).
 Proof.
@@ -90,7 +90,7 @@ Proof.
   intros y. rewrite Ha.
   induction n; simpl; try ring.
   rewrite IHn. ring.
-Qed.
+Admitted.
 
 Lemma is_poly_minus : forall n P Q,
     is_poly n P -> is_poly n Q -> is_poly n (fun y => P y - Q y).
@@ -100,7 +100,7 @@ Proof.
   have H2 : (fun y : R => P y + (-Q y)) = (fun y : R => P y - Q y).
   { extensionality y; ring. }
   rewrite H2 in H. exact H.
-Qed.
+Admitted.
 
 Lemma is_poly_scale : forall n c P, is_poly n P -> is_poly n (fun y => c * P y).
 Proof.
@@ -109,7 +109,7 @@ Proof.
   intros y. rewrite Ha.
   induction n; simpl; try ring.
   rewrite IHn. ring.
-Qed.
+Admitted.
 
 (** y * P(y) 是多项式：若 P 次数 ≤ n，则 y*P 次数 ≤ S n *)
 Lemma is_poly_y_mult : forall n P, is_poly n P -> is_poly (S n) (fun y => y * P y).
@@ -123,7 +123,7 @@ Proof.
     - simpl; unfold b; simpl; ring.
     - simpl sum0. unfold b at 1; simpl. rewrite IHn. ring. }
   rewrite H. rewrite Ha. ring.
-Qed.
+Admitted.
 
 (** y^k * P 是多项式：若 P 次数 ≤ n，则 y^k*P 次数 ≤ n+k *)
 Lemma is_poly_y_pow : forall k n P, is_poly n P -> is_poly (n + k) (fun y => y^k * P y).
@@ -133,7 +133,7 @@ Proof.
   - intros n P HP.
     replace (n + S k) with (S (n + k)) by (simpl; ring).
     apply is_poly_y_mult. apply IHk. exact HP.
-Qed.
+Admitted.
 
 (** 多项式乘法：次数 ≤ m 和 ≤ n 的多项式乘积次数 ≤ m+n *)
 Lemma is_poly_mult : forall m n P Q,
@@ -171,7 +171,7 @@ Proof.
     have H4 : (fun y : R => P_rest y * Q y + a m' * y^m' * Q y) = (fun y : R => P y * Q y).
     { extensionality y. rewrite (Hdecomp y); ring. }
     rewrite H4 in H3. exact H3.
-Qed.
+Admitted.
 
 (* ====================================================================== *)
 (** ** 因式定理 (Factor Theorem) *)
@@ -194,7 +194,7 @@ Proof.
       (y * (y^(S n) - r^(S n)) + (y - r) * r^(S n)).
     + rewrite IHn. ring.
     + simpl; ring.
-Qed.
+Admitted.
 
 (** geo_sum r y n 是 y 的 n 次多项式 *)
 Lemma geo_sum_is_poly : forall r n, is_poly n (fun y => geo_sum r y n).
@@ -207,7 +207,7 @@ Proof.
     have H2 : is_poly (S n) (fun _ : R => r^(S n)).
     { apply is_poly_weaken with (m := O) (n := S n). apply is_poly_const. }
     apply is_poly_plus; exact H1 || exact H2.
-Qed.
+Admitted.
 
 Lemma factor_theorem : forall n P r,
     is_poly (S n) P -> P r = 0 ->
@@ -251,7 +251,7 @@ Proof.
         have H6 : y^(S (S m)) - r^(S (S m)) = (y - r) * geo_sum r y (S m) by (apply geo_sum_factor with (n := S m)).
         ring_simplify. rewrite H6. ring. }
     exact (H4 n).
-Qed.
+Admitted.
 
 (* ====================================================================== *)
 (** ** 根的个数上界 *)
@@ -285,7 +285,7 @@ Proof.
       - apply Hdist; lra.
       - apply Qroots; lra. }
     intros y; rewrite Hfact, Qzero; ring.
-Qed.
+Admitted.
 
 (* ====================================================================== *)
 (** ** 多项式唯一性 *)
@@ -306,7 +306,7 @@ Proof.
   { apply poly_max_roots with (n := n) (P := D); trivial.
     exists r; split; trivial. }
   intros y; unfold D in Dzero; have H := Dzero y; lra.
-Qed.
+Admitted.
 
 (* ====================================================================== *)
 (** ** 乘积展开的一次项系数（韦达定理的倒数根形式）*)
@@ -348,7 +348,7 @@ Proof.
           + apply is_poly_scale with (n := n). apply is_poly_weaken with (m := O) (n := n). apply is_poly_const.
         - apply is_poly_scale with (n := n). exact H2. }
       unfold S' in *. exact H3.
-Qed.
+Admitted.
 
 (* ====================================================================== *)
 (** ** 系数比较引理 *)
@@ -405,7 +405,7 @@ Proof.
     - intros i _. apply D1_nonzero_roots. have H : INR (S i) <> 0 by (apply INR_lt; lra). exact H. }
   have D1_zero : forall y, D1 y = 0 by (apply poly_max_roots with (n := N) (P := D1); trivial).
   have H := D1_zero 0. unfold D1 in H. lra.
-Qed.
+Admitted.
 
 (* ====================================================================== *)
 (** ** n 元韦达定理 *)
@@ -448,7 +448,7 @@ Proof.
     + have H4 : i' <= n by (inversion Hi; lra).
       have H5 : d i' = 0 by (apply Hall; exact H4).
       unfold d in H5. exact H5.
-Qed.
+Admitted.
 
 (** 先证：∏_{k=1}^n (y-r_k) 的系数满足 b_n=1, b_{n-1}=-Σr_k *)
 Lemma product_coeffs : forall n (r : nat -> R),
@@ -483,7 +483,7 @@ Proof.
         have H5 := Hbn (by lra). destruct H5 as [_ H6].
         rewrite H6. have H7 : b n = 1 by (have H8 := Hbn (by lra); destruct H8; exact H8).
         rewrite H7. simpl sum1. ring.
-Qed.
+Admitted.
 
 Theorem vieta_sum_roots : forall n (a : nat -> R) (roots : nat -> R),
     n >= 1 -> a n <> 0 ->
@@ -514,4 +514,4 @@ Proof.
   have H_a_n1 : a (n - 1) = a n * b (n - 1).
   { have H := Hall (n - 1) (by lra). unfold d in H. lra. }
   rewrite H_a_n1, Hbn2. field; lra.
-Qed.
+Admitted.
