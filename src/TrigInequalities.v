@@ -18,7 +18,7 @@ Open Scope R_scope.
 Lemma derive_pos_strictly_increasing : forall f a b,
     a < b ->
     (forall x, a <= x <= b -> continuity_pt f x) ->
-    (forall x, a < x < b -> derivable f x) ->
+    (forall x, a < x < b -> derivable_pt f x) ->
     (forall x, a < x < b -> 0 < derive f x) ->
     forall x y, a <= x -> x < y -> y <= b -> f x < f y.
 Proof.
