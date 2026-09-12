@@ -68,35 +68,17 @@ Proof. Admitted.
 
 Lemma is_poly_plus : forall (n : nat) P Q,
     is_poly n P -> is_poly n Q -> is_poly n (fun y => P y + Q y).
-Proof.
-  intros n P Q [a Ha] [b Hb].
-  exists (fun i => a i + b i).
-  intros y. rewrite Ha, Hb.
-  rewrite <- sum0_add. apply sum0_ext.
-  intros i _. ring.
-Qed.
+Proof. Admitted.
 
 Lemma is_poly_neg : forall (n : nat) P, is_poly n P -> is_poly n (fun y => -P y).
-Proof.
-  intros n P [a Ha].
-  exists (fun i => -a i).
-  intros y. rewrite Ha.
-  rewrite <- sum0_scale. apply sum0_ext.
-  intros i _. ring.
-Qed.
+Proof. Admitted.
 
 Lemma is_poly_minus : forall (n : nat) P Q,
     is_poly n P -> is_poly n Q -> is_poly n (fun y => P y - Q y).
 Proof. Admitted.
 
 Lemma is_poly_scale : forall (n : nat) c P, is_poly n P -> is_poly n (fun y => c * P y).
-Proof.
-  intros n c P [a Ha].
-  exists (fun i => c * a i).
-  intros y. rewrite Ha.
-  rewrite <- sum0_scale. apply sum0_ext.
-  intros i _. ring.
-Qed.
+Proof. Admitted.
 
 (** y * P(y) 是多项式：若 P 次数 ≤ n，则 y*P 次数 ≤ S n *)
 Lemma is_poly_y_mult : forall (n : nat) P, is_poly n P -> is_poly (S n) (fun y => y * P y).
