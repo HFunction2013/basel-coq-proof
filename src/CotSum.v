@@ -9,6 +9,7 @@ Require Import Coq.micromega.Lra.
 Require Import Coq.micromega.Psatz.
 Require Import Coq.Arith.Arith.
 Require Import Basics.
+Require Import TrigInequalities.
 Require Import PolynomialTheory.
 Require Import SinMultiple.
 

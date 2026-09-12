@@ -39,7 +39,7 @@ Proof. Admitted.
 (* ====================================================================== *)
 (** ** 关键不等式：L_n < S_n < U_n *)
 
-Lemma partial_sum_bounds : forall n, 0 < n ->
+Lemma partial_sum_bounds : forall (n : nat), 0 < n ->
     lower_bound n < partial_sum n /\ partial_sum n < upper_bound n.
 Proof. Admitted.
 
