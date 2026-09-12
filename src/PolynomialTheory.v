@@ -119,8 +119,9 @@ Proof.
   intro y.
   assert (H2 : (n + 1)%nat = S n).
   { apply Nat.add_1_r. }
-  rewrite H2.
-  exact (Ha y).
+  assert (H3 : P y = sum0 (fun i : nat => a i * y ^ i) (S n)).
+  { rewrite <- H2. exact (Ha y). }
+  exact H3.
 Qed.
 
 (** 几何和 geo_sum r y n = r^n + r^{n-1}y + ... + r y^{n-1} + y^n *)
