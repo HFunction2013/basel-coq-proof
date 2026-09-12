@@ -91,7 +91,11 @@ Qed.
 
 Lemma is_poly_minus : forall (n : nat) P Q,
     is_poly n P -> is_poly n Q -> is_poly n (fun y => P y - Q y).
-Proof. Admitted.
+Proof.
+  intros n P Q HP HQ.
+  assert (Hneg : is_poly n (fun y => -Q y)) by (apply is_poly_neg; exact HQ).
+  apply is_poly_plus; [exact HP | exact Hneg].
+Qed.
 
 Lemma is_poly_y_mult : forall (n : nat) P, is_poly n P -> is_poly (S n) (fun y => y * P y).
 Proof. Admitted.
