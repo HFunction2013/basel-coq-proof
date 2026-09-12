@@ -53,7 +53,12 @@ Proof.
   assert (H3 : /x < /sin x) by (apply Rinv_lt_contravar; lra).
   assert (H4 : cos x / sin x < /x).
   { assert (H5 : x * cos x < sin x).
-    { unfold tan in H2. nra. }
+    { unfold tan in H2.
+      assert (H6 : x * cos x < (sin x / cos x) * cos x).
+      { apply Rmult_lt_compat_r. exact Hcos_pos. exact H2. }
+      assert (H7 : (sin x / cos x) * cos x = sin x).
+      { field. lra. }
+      rewrite H7 in H6. exact H6. }
     nra. }
   assert (Hcot_pos : 0 < cot x) by (unfold cot; nra).
   assert (Hinv_pos : 0 < /x) by (apply Rinv_0_lt_compat; lra).
