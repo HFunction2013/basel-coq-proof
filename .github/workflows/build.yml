@@ -15,27 +15,44 @@ jobs:
       fail-fast: false
       matrix:
         coq_version: ['8.18', '8.19', '8.20']
+    env:
+      COQ_IMAGE: coqorg/coq:${{ matrix.coq_version }}
+      CACHE_KEY: coq-docker-${{ matrix.coq_version }}
     steps:
       - uses: actions/checkout@v4
+
+      # 1) 恢复镜像缓存
+      - name: Restore Coq docker image cache
+        id: docker-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/coq-docker/${{ matrix.coq_version }}.tar
+          key: ${{ env.CACHE_KEY }}
+
+      # 2) 未命中：pull + save
+      - name: Pull and save Coq image
+        if: steps.docker-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/.cache/coq-docker
+          docker pull "$COQ_IMAGE"
+          docker image save "$COQ_IMAGE" -o ~/.cache/coq-docker/${{ matrix.coq_version }}.tar
+
+      # 3) 命中：load 回本地
+      - name: Load Coq image from cache
+        if: steps.docker-cache.outputs.cache-hit == 'true'
+        run: |
+          docker image load -i ~/.cache/coq-docker/${{ matrix.coq_version }}.tar
+
+      # 4）确认本地已有，再交给 docker-coq-action
+      - name: Verify image present
+        run: docker image inspect "$COQ_IMAGE" >/dev/null
 
       - name: Build with Coq ${{ matrix.coq_version }}
         uses: coq-community/docker-coq-action@v1
         with:
           coq_version: ${{ matrix.coq_version }}
-          # 必须显式列出全部阶段，mustache 才逐个解析
           custom_script: |
-            {{before_install}}
-            {{install}}
-            {{after_install}}
             {{before_script}}
-            {{script}}
-            {{after_script}}
-            {{uninstall}}
-          before_script: |
-            startGroup "Workaround permission issue"
-            sudo chown -R coq:coq .
-            endGroup
-          script: |
             startGroup "gen makefile"
             test -f _CoqProject || { echo "_CoqProject missing"; exit 1; }
             coq_makefile -f _CoqProject -o CoqMakefile
@@ -43,12 +60,16 @@ jobs:
             startGroup "make all"
             make -f CoqMakefile all
             endGroup
+          before_script: |
+            startGroup "fix perm"
+            sudo chown -R coq:coq .
+            endGroup
 
       - name: Revert permissions
         if: ${{ always() }}
         run: sudo chown -R 1001:116 .
 
-      - name: Upload Coq 8.20 artifacts
+      - name: Upload 8.20 artifacts
         if: matrix.coq_version == '8.20'
         uses: actions/upload-artifact@v4
         with:
