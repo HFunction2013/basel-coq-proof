@@ -24,7 +24,7 @@ Proof.
   induction n.
   - exfalso.
     assert (H1 : 0 <= INR k).
-    { apply le_INR. lia. }
+    { induction k; [lra|simpl; lra]. }
     assert (H2 : INR k <= 0). lra.
     assert (H3 : INR k = 0). lra.
     assert (H4 : k = 0). apply INR_eq. lra.
