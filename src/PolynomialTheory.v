@@ -44,6 +44,17 @@ Proof. Admitted.
 Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
 Proof. Admitted.
 
+(** 几何和 geo_sum r y n = r^n + r^{n-1}y + ... + r y^{n-1} + y^n *)
+Fixpoint geo_sum (r y : R) (n : nat) : R :=
+  match n with
+  | O => 1
+  | S n' => y * geo_sum r y n' + r^(S n')
+  end.
+
+Lemma geo_sum_factor : forall r y n,
+    y^(S n) - r^(S n) = (y - r) * geo_sum r y n.
+Proof. Admitted.
+
 (** geo_sum r y n 是 y 的 n 次多项式 *)
 Lemma geo_sum_is_poly : forall r n, is_poly n (fun y => geo_sum r y n).
 Proof. Admitted.
