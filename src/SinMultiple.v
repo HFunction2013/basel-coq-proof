@@ -83,14 +83,17 @@ Proof.
       { assert (H1a : is_poly (S n) (fun y : R => Q n y)) by (apply is_poly_succ_weaken; exact HQ).
         assert (H1b : is_poly (S n) (fun y : R => 2*y * Q n y)).
         { assert (H1b1 : is_poly (S n) (fun y : R => y * Q n y)) by (apply is_poly_y_mult; exact HQ).
+          change (fun y : R => 2*y * Q n y) with (fun y : R => (2 : R) * (y * Q n y)).
           apply is_poly_scale with (c := (2 : R)); exact H1b1. }
         apply is_poly_minus; [exact H1a | exact H1b]. }
       assert (H2 : is_poly (S n) (fun y : R => 2*(1-y) * Rpoly n y)).
       { assert (H2a : is_poly (S n) (fun y : R => Rpoly n y)) by (apply is_poly_succ_weaken; exact HR).
         assert (H2b : is_poly (S n) (fun y : R => 2*y * Rpoly n y)).
         { assert (H2b1 : is_poly (S n) (fun y : R => y * Rpoly n y)) by (apply is_poly_y_mult; exact HR).
+          change (fun y : R => 2*y * Rpoly n y) with (fun y : R => (2 : R) * (y * Rpoly n y)).
           apply is_poly_scale with (c := (2 : R)); exact H2b1. }
         assert (H2c : is_poly (S n) (fun y : R => (1-y) * Rpoly n y)) by (apply is_poly_minus; [exact H2a | exact H2b]).
+        change (fun y : R => 2*(1-y) * Rpoly n y) with (fun y : R => (2 : R) * ((1-y) * Rpoly n y)).
         apply is_poly_scale with (c := (2 : R)); exact H2c. }
       apply is_poly_plus; [exact H1 | exact H2].
     + simpl.
@@ -98,10 +101,12 @@ Proof.
       { assert (H3a : is_poly (S n) (fun y : R => Rpoly n y)) by (apply is_poly_succ_weaken; exact HR).
         assert (H3b : is_poly (S n) (fun y : R => 2*y * Rpoly n y)).
         { assert (H3b1 : is_poly (S n) (fun y : R => y * Rpoly n y)) by (apply is_poly_y_mult; exact HR).
+          change (fun y : R => 2*y * Rpoly n y) with (fun y : R => (2 : R) * (y * Rpoly n y)).
           apply is_poly_scale with (c := (2 : R)); exact H3b1. }
         apply is_poly_minus; [exact H3a | exact H3b]. }
       assert (H4 : is_poly (S n) (fun y : R => 2*y * Q n y)).
       { assert (H4a : is_poly (S n) (fun y : R => y * Q n y)) by (apply is_poly_y_mult; exact HQ).
+        change (fun y : R => 2*y * Q n y) with (fun y : R => (2 : R) * (y * Q n y)).
         apply is_poly_scale with (c := (2 : R)); exact H4a. }
       apply is_poly_minus; [exact H3 | exact H4].
 Qed.
