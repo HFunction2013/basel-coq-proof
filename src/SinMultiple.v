@@ -58,9 +58,13 @@ Qed.
 Lemma Q_at_zero : forall (n : nat), Q n 0 = 2 * INR n + 1.
 Proof.
   intro n. induction n.
-  - simpl. ring.
-  - simpl. rewrite IHn. rewrite R_at_zero.
-    rewrite S_INR. ring.
+  - compute. ring.
+  - assert (H : Q (S n) 0 = Q n 0 + 2).
+    { simpl. ring. }
+    rewrite H. rewrite IHn.
+    assert (H2 : 2 * INR n + 1 + 2 = 2 * INR (S n) + 1).
+    { rewrite S_INR. ring. }
+    exact H2.
 Qed.
 
 (* ====================================================================== *)
