@@ -56,7 +56,12 @@ Proof.
   intros f n y.
   induction n.
   - simpl. ring.
-  - simpl. rewrite IHn. ring.
+  - assert (H1 : y * sum0 (fun i => f i * y^i) (S n) = y * sum0 (fun i => f i * y^i) n + f n * y^(S n)).
+    { simpl. ring. }
+    assert (H2 : sum0 (fun i => (match i with O => 0 | S j => f j end) * y^i) (S (S n)) = sum0 (fun i => (match i with O => 0 | S j => f j end) * y^i) (S n) + f n * y^(S n)).
+    { simpl. ring. }
+    rewrite H1, H2.
+    rewrite IHn. ring.
 Qed.
 
 (** 常数是 0 次多项式 *)
