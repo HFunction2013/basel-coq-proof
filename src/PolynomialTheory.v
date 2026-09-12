@@ -124,9 +124,9 @@ Proof. Admitted.
 (** geo_sum r y n 是 y 的 n 次多项式 *)
 Lemma geo_sum_is_poly : forall r n, is_poly n (fun y => geo_sum r y n).
 Proof.
-  induction n.
+  intros r n. induction n.
   - simpl. apply is_poly_const.
-  - intros r. simpl geo_sum.
+  - simpl geo_sum.
     assert (H1 : is_poly (S n) (fun y : R => y * geo_sum r y n)) by (apply is_poly_y_mult; apply IHn).
     assert (H2 : is_poly (S n) (fun _ : R => r^(S n))) by (apply is_poly_weaken with (m := O) (n := S n); apply is_poly_const).
     apply is_poly_plus; [exact H1 | exact H2].
