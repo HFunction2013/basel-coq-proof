@@ -100,6 +100,16 @@ Proof.
   apply is_poly_plus; [exact HP | exact Hneg].
 Qed.
 
+Lemma is_poly_y_pow : forall k n P, is_poly n P -> is_poly (n + k) (fun y => y^k * P y).
+Proof. Admitted.
+
+Lemma is_poly_mult : forall m n P Q,
+    is_poly m P -> is_poly n Q -> is_poly (m + n) (fun y => P y * Q y).
+Proof. Admitted.
+
+Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
+Proof. Admitted.
+
 Lemma is_poly_succ_weaken : forall (n : nat) P, is_poly n P -> is_poly (S n) P.
 Proof.
   intros n P HP.
@@ -112,16 +122,6 @@ Proof.
   rewrite H2.
   exact (Ha y).
 Qed.
-
-Lemma is_poly_y_pow : forall k n P, is_poly n P -> is_poly (n + k) (fun y => y^k * P y).
-Proof. Admitted.
-
-Lemma is_poly_mult : forall m n P Q,
-    is_poly m P -> is_poly n Q -> is_poly (m + n) (fun y => P y * Q y).
-Proof. Admitted.
-
-Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
-Proof. Admitted.
 
 (** 几何和 geo_sum r y n = r^n + r^{n-1}y + ... + r y^{n-1} + y^n *)
 Fixpoint geo_sum (r y : R) (n : nat) : R :=
