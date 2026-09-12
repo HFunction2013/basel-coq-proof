@@ -74,19 +74,6 @@ Proof.
   - rewrite IHn. ring.
 Qed.
 
-(** 求和换元：sum_{k=1}^n f(k) = sum_{k=1}^n f(n+1-k) *)
-Lemma sum1_rev : forall f n,
-    sum1 f n = sum1 (fun k => f ((S n - k)%nat)) n.
-Proof.
-  intros f n. induction n.
-  - simpl; ring.
-  - rewrite sum1_S, IHn.
-    replace (sum1 (fun k : nat => f ((S (S n) - k)%nat)) (S n))
-      with (sum1 (fun k : nat => f ((S n - k)%nat)) n + f 1%nat).
-    + simpl; ring.
-    + rewrite sum1_S. simpl; ring.
-Qed.
-
 (* ====================================================================== *)
 (** ** 乘积基本性质 *)
 
