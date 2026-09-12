@@ -32,34 +32,34 @@ with R (n : nat) (y : R) : R :=
 (* ====================================================================== *)
 (** ** 核心定理：倍角公式（归纳证明）*)
 
-Theorem sin_cos_multiple_angle : forall n theta,
+Theorem sin_cos_multiple_angle : forall (n : nat) (theta : R),
     sin ((2 * INR n + 1) * theta) = sin theta * Q n (sin theta^2) /\
     cos ((2 * INR n + 1) * theta) = cos theta * R n (sin theta^2).
 Proof. Admitted.
 
-Corollary sin_multiple_angle : forall n theta,
+Corollary sin_multiple_angle : forall (n : nat) (theta : R),
     sin ((2 * INR n + 1) * theta) = sin theta * Q n (sin theta^2).
 Proof. Admitted.
 
 (* ====================================================================== *)
 (** ** Q_n(0) 和 R_n(0) *)
 
-Lemma R_at_zero : forall n, R n 0 = 1.
+Lemma R_at_zero : forall (n : nat), R n 0 = 1.
 Proof. Admitted.
 
-Lemma Q_at_zero : forall n, Q n 0 = 2 * INR n + 1.
+Lemma Q_at_zero : forall (n : nat), Q n 0 = 2 * INR n + 1.
 Proof. Admitted.
 
 (* ====================================================================== *)
 (** ** Q_n, R_n 都是多项式 *)
 
-Lemma Q_R_is_poly : forall n, is_poly n (Q n) /\ is_poly n (R n).
+Lemma Q_R_is_poly : forall (n : nat), is_poly n (Q n) /\ is_poly n (R n).
 Proof. Admitted.
 
-Corollary Q_is_poly : forall n, is_poly n (Q n).
+Corollary Q_is_poly : forall (n : nat), is_poly n (Q n).
 Proof. Admitted.
 
-Corollary R_is_poly : forall n, is_poly n (R n).
+Corollary R_is_poly : forall (n : nat), is_poly n (R n).
 Proof. Admitted.
 
 (* ====================================================================== *)
@@ -71,7 +71,7 @@ Proof. Admitted.
 Lemma sin_pos_0_pi : forall x, 0 < x -> x < PI -> 0 < sin x.
 Proof. Admitted.
 
-Lemma Q_roots : forall n k, 1 <= k <= n ->
+Lemma Q_roots : forall (n : nat) (k : nat), 1 <= k <= n ->
     Q n (sin (INR k * PI / (2 * INR n + 1))^2) = 0.
 Proof. Admitted.
 
@@ -81,14 +81,14 @@ Proof. Admitted.
     Q_n(y) = (2n+1) + b_n·y + y²·Tq(y)，其中 b_n = -2n(n+1)(2n+1)/3
     R_n(y) = 1 + d_n·y + y²·Tr(y)，其中 d_n = -2n(n+1) *)
 
-Theorem Q_R_coeff : forall n,
+Theorem Q_R_coeff : forall (n : nat),
     (exists Tq, (forall y, Q n y = (2*INR n+1) +
         (-2*INR n*(INR n+1)*(2*INR n+1)/3)*y + y^2*Tq y) /\ is_poly n Tq) /\
     (exists Tr, (forall y, R n y = 1 +
         (-2*INR n*(INR n+1))*y + y^2*Tr y) /\ is_poly n Tr).
 Proof. Admitted.
 
-Corollary Q_coeff_formula : forall n, exists Tq,
+Corollary Q_coeff_formula : forall (n : nat), exists Tq,
     (forall y, Q n y = (2*INR n+1) +
         (-2*INR n*(INR n+1)*(2*INR n+1)/3)*y + y^2*Tq y) /\
     is_poly n Tq.
