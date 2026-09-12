@@ -115,14 +115,17 @@ Proof.
   intros a b Ha Hab.
   assert (Hb : 0 < b) by lra.
   assert (Hpos : 0 < a * b) by nra.
+  assert (Hneq_a : a <> 0) by lra.
+  assert (Hneq_b : b <> 0) by lra.
+  assert (Hinv_mult : / (a * b) = /a * /b) by (apply Rinv_mult; lra).
   assert (H : a * / (a * b) < b * / (a * b)).
   { apply Rmult_lt_compat_r.
     - apply Rinv_0_lt_compat. exact Hpos.
     - exact Hab. }
   assert (H1 : a * / (a * b) = /b).
-  { field. lra. lra. }
+  { rewrite Hinv_mult. field. lra. }
   assert (H2 : b * / (a * b) = /a).
-  { field. lra. lra. }
+  { rewrite Hinv_mult. field. lra. }
   rewrite H1, H2 in H.
   exact H.
 Qed.
