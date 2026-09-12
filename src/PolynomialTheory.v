@@ -70,10 +70,13 @@ Qed.
 (** 多项式取负封闭 *)
 Lemma is_poly_neg : forall (n : nat) P, is_poly n P -> is_poly n (fun y => -P y).
 Proof.
-  intros n P HP.
-  assert (H : (fun y : R => -P y) = (fun y : R => (-1) * P y)) by (extensionality y; ring).
+  intros n P [a Ha].
+  exists (fun i => -a i).
+  intros y. rewrite Ha.
+  assert (H : -sum0 (fun i : nat => a i * y^i) n = (-1) * sum0 (fun i : nat => a i * y^i) n) by ring.
   rewrite H.
-  apply is_poly_scale with (c := -1). exact HP.
+  rewrite <- sum0_scale. apply sum0_ext.
+  intros i _. ring.
 Qed.
 
 (** 多项式数乘封闭 *)
