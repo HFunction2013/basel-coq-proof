@@ -32,12 +32,12 @@ with R (n : nat) (y : R) : R :=
 (* ====================================================================== *)
 (** ** 核心定理：倍角公式（归纳证明）*)
 
-Theorem sin_cos_multiple_angle : forall (n : nat) (theta : R),
+Theorem sin_cos_multiple_angle : forall (n : nat) theta,
     sin ((2 * INR n + 1) * theta) = sin theta * Q n (sin theta^2) /\
     cos ((2 * INR n + 1) * theta) = cos theta * R n (sin theta^2).
 Proof. Admitted.
 
-Corollary sin_multiple_angle : forall (n : nat) (theta : R),
+Corollary sin_multiple_angle : forall (n : nat) theta,
     sin ((2 * INR n + 1) * theta) = sin theta * Q n (sin theta^2).
 Proof. Admitted.
 
