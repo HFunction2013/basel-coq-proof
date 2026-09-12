@@ -60,7 +60,7 @@ Proof.
   intro n. induction n.
   - compute. ring.
   - assert (H : Q (S n) 0 = Q n 0 + 2).
-    { simpl. ring. }
+    { simpl. rewrite R_at_zero. ring. }
     rewrite H. rewrite IHn.
     assert (H2 : 2 * INR n + 1 + 2 = 2 * INR (S n) + 1).
     { rewrite S_INR. ring. }
