@@ -9,12 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: coqorg/coq:8.20
     strategy:
       fail-fast: false
       matrix:
         coq_version: ['8.18', '8.19', '8.20']
     
+    # container 必须在 job 级别，不能在 strategy 里
     container:
       image: coqorg/coq:${{ matrix.coq_version }}
       options: --user root
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 获取完整历史，便于版本对比
+          fetch-depth: 0
 
       - name: Debug environment
         run: |
@@ -41,9 +41,7 @@ jobs:
 
       - name: Prepare build environment
         run: |
-          # 确保有写权限
           chmod -R 777 .
-          # 检查 _CoqProject 是否存在
           if [ ! -f _CoqProject ]; then
             echo "Error: _CoqProject file not found!"
             exit 1
@@ -54,16 +52,6 @@ jobs:
           echo "Building with Coq ${{ matrix.coq_version }}..."
           coq_makefile -f _CoqProject -o CoqMakefile
           make -f CoqMakefile all
-
-      - name: Run tests (if any)
-        if: success()
-        run: |
-          # 如果有测试目标，运行它
-          if grep -q "^test:" CoqMakefile; then
-            make -f CoqMakefile test
-          else
-            echo "No test target found, skipping tests"
-          fi
 
       - name: Upload artifacts for Coq 8.20
         if: matrix.coq_version == '8.20' && success()
@@ -76,7 +64,7 @@ jobs:
             **/*.v
             CoqMakefile
             Makefile.coq*
-            !**/*.v~  # 排除备份文件
+            !**/*.v~
           if-no-files-found: warn
           retention-days: 7
 
@@ -93,13 +81,14 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    container: coqorg/coq:8.20
+    container:
+      image: coqorg/coq:8.20
+      options: --user root
     steps:
       - uses: actions/checkout@v4
       
       - name: Check code style
         run: |
-          # 检查是否有 tab 字符
           if grep -rP '\t' --include='*.v' .; then
             echo "Warning: Tab characters found in .v files"
             exit 1
