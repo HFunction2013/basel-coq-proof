@@ -11,6 +11,8 @@ Require Import Basics.
 
 Open Scope R_scope.
 
+Definition cot (x : R) : R := cos x / sin x.
+
 (* ====================================================================== *)
 (** ** 核心不等式（Admitted，技术细节：求导+单调性+MVT）*)
 
