@@ -56,7 +56,12 @@ Proof.
 Qed.
 
 Lemma Q_at_zero : forall (n : nat), Q n 0 = 2 * INR n + 1.
-Proof. Admitted.
+Proof.
+  intro n. induction n.
+  - simpl. ring.
+  - simpl. rewrite IHn. rewrite R_at_zero.
+    rewrite S_INR. ring.
+Qed.
 
 (* ====================================================================== *)
 (** ** Q_n, R_n 都是多项式 *)
@@ -78,7 +83,14 @@ Qed.
 (** ** Q_n 的根 *)
 
 Lemma sin_nat_pi : forall k, sin (INR k * PI) = 0.
-Proof. Admitted.
+Proof.
+  intro k. induction k.
+  - simpl. rewrite Rmult_0_l. apply sin_0.
+  - replace (INR (S k) * PI) with (INR k * PI + PI).
+    + rewrite sin_add. rewrite IHk.
+      rewrite cos_PI. rewrite sin_PI. ring.
+    + rewrite S_INR. ring.
+Qed.
 
 Lemma sin_pos_0_pi : forall x, 0 < x -> x < PI -> 0 < sin x.
 Proof. Admitted.
