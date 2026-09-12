@@ -5,6 +5,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,25 +17,36 @@ jobs:
         coq_version: ['8.18', '8.19', '8.20']
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive   # 有子模块再加，没有可删
 
       - name: Build with Coq ${{ matrix.coq_version }}
         uses: coq-community/docker-coq-action@v1
         with:
           coq_version: ${{ matrix.coq_version }}
           before_script: |
-            startGroup "Fix permission issue (docker-coq known issue)"
+            startGroup "Fix perm (docker-coq known issue)"
+            id
+            pwd
+            ls -la
             sudo chown -R 1000:1000 .
+            # 上面不行就换成 sudo chown -R coq:coq .
+            # 或者更暴力：sudo chmod -R a=u .
             endGroup
           custom_script: |
+            startGroup "gen makefile"
+            test -f _CoqProject || { echo "_CoqProject missing"; exit 1; }
             coq_makefile -f _CoqProject -o CoqMakefile
+            endGroup
+            startGroup "make all"
             make -f CoqMakefile all
+            endGroup
 
-      # 还原权限，避免 cleanup 警告
       - name: Revert permissions
         if: ${{ always() }}
         run: sudo chown -R 1001:116 .
 
-      - name: Upload Coq 8.20 artifacts
+      - name: Upload 8.20 artifacts
         if: matrix.coq_version == '8.20'
         uses: actions/upload-artifact@v4
         with:
