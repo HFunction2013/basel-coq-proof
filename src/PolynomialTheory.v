@@ -34,7 +34,8 @@ Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
 Proof.
   intros f g n H; induction n; simpl.
   - apply H; lra.
-  - rewrite IHn; [ring | intros i Hi; apply H; lra].
+  - assert (HSn : f (S n) = g (S n)) by (apply H; lra).
+    rewrite IHn, HSn. ring.
 Qed.
 
 Lemma sum0_append_zero : forall (a : nat -> R) m n y,
