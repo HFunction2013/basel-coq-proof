@@ -91,7 +91,7 @@ Lemma sum_sq_formula : forall n,
     INR n * (INR n + 1) * (2 * INR n + 1) / 6.
 Proof.
   induction n.
-  - simpl; ring.
+  - vm_compute. ring.
   - rewrite sum1_S, IHn. repeat rewrite INR_S. field; ring.
 Qed.
 
