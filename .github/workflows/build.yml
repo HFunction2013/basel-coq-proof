@@ -1,39 +1,75 @@
-name: Coq Build
+name: Coq CI
 
 on:
   push:
-    branches: [main, master]
   pull_request:
-  workflow_dispatch:
 
 jobs:
   build:
-    name: Coq 8.20
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+name: Coq CI
 
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        coq_version: ['8.18', '8.19', '8.20']
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Build Coq project
+      - name: Build with Coq ${{ matrix.coq_version }}
         uses: coq-community/docker-coq-action@v1
         with:
-          coq_version: '8.20'
-          ocaml_version: '4.14-flambda'
+          coq_version: ${{ matrix.coq_version }}
+          export: 'true'
           custom_script: |
-            eval $(opam env)
-            coqc --version
             coq_makefile -f _CoqProject -o CoqMakefile
             make -f CoqMakefile all
 
-      - name: Upload compiled Coq files
+      # 只有 8.20 才上传产物
+      - name: Upload Coq 8.20 artifacts
+        if: matrix.coq_version == '8.20'
         uses: actions/upload-artifact@v4
         with:
-          name: coq-compiled-${{ github.sha }}
+          name: coq-build-8.20
           path: |
             **/*.vo
             **/*.glob
             CoqMakefile
-            Makefile.coq
+            Makefile.coq*
           if-no-files-found: warn
-          retention-days: 30
+          retention-days: 7      matrix:
+        coq_version: ['8.18', '8.19', '8.20']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build with Coq ${{ matrix.coq_version }}
+        uses: coq-community/docker-coq-action@v1
+        with:
+          coq_version: ${{ matrix.coq_version }}
+          ocaml_version: '4.14'
+          custom_script: |
+            coq_makefile -f _CoqProject -o CoqMakefile
+            make -f CoqMakefile all
+
+      # 只有 8.20 才上传产物
+      - name: Upload Coq 8.20 artifacts
+        if: matrix.coq_version == '8.20'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coq-build-8.20
+          path: |
+            **/*.vo
+            **/*.glob
+            CoqMakefile
+            Makefile.coq*
+          if-no-files-found: warn
+          retention-days: 7
