@@ -46,30 +46,32 @@ Proof. intros; simpl; ring. Qed.
 Lemma sum1_add : forall f g n,
     sum1 (fun k => f k + g k) n = sum1 f n + sum1 g n.
 Proof.
-  induction n; simpl; intros; try ring.
-  rewrite IHn. ring.
+  intros f g n. induction n; simpl.
+  - ring.
+  - rewrite IHn. ring.
 Qed.
 
 Lemma sum1_const : forall (c : R) n,
     sum1 (fun _ => c) n = INR n * c.
 Proof.
-  induction n; simpl; intros.
+  intros c n. induction n; simpl.
   - ring.
-  - rewrite IHn. simpl; ring.
+  - rewrite IHn. ring.
 Qed.
 
 Lemma sum1_scale : forall (c : R) f n,
     sum1 (fun k => c * f k) n = c * sum1 f n.
 Proof.
-  induction n; simpl; intros; try ring.
-  rewrite IHn. ring.
+  intros c f n. induction n; simpl.
+  - ring.
+  - rewrite IHn. ring.
 Qed.
 
 (** 求和换元：sum_{k=1}^n f(k) = sum_{k=1}^n f(n+1-k) *)
 Lemma sum1_rev : forall f n,
     sum1 f n = sum1 (fun k => f (S n - k)) n.
 Proof.
-  induction n; intros.
+  intros f n. induction n.
   - simpl; ring.
   - rewrite sum1_S, IHn.
     replace (sum1 (fun k : nat => f (S (S n) - k)) (S n))
