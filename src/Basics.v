@@ -116,7 +116,9 @@ Proof.
   assert (Hb : 0 < b) by lra.
   assert (Hpos : 0 < a * b) by nra.
   assert (H : a * / (a * b) < b * / (a * b)).
-  { apply Rmult_lt_compat_r; [lra|lra]. }
+  { apply Rmult_lt_compat_r.
+    - apply Rinv_0_lt_compat. exact Hpos.
+    - exact Hab. }
   field_simplify in H.
   lra.
 Qed.
