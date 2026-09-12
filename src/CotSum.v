@@ -19,15 +19,39 @@ Open Scope R_scope.
 (** ** 辅助引理 *)
 
 Lemma prod1_has_zero : forall (f : nat -> R) (n k : nat), 1 <= k <= n -> f k = 0 -> prod1 f n = 0.
-Proof. Admitted.
+Proof.
+  intros f n k Hk Hf.
+  induction n.
+  - exfalso. lra.
+  - simpl.
+    destruct (Nat.eq_dec k (S n)).
+    + rewrite e. rewrite Hf. ring.
+    + assert (Hk' : 1 <= k <= n). { lra. }
+      assert (H : prod1 f n = 0) by (apply IHn; assumption).
+      rewrite H. ring.
+Qed.
 
 Lemma sum1_ext : forall (f g : nat -> R) (n : nat), (forall k : nat, 1 <= k <= n -> f k = g k) ->
     sum1 f n = sum1 g n.
-Proof. Admitted.
+Proof.
+  intros f g n H.
+  induction n.
+  - simpl. ring.
+  - simpl. f_equal.
+    + apply IHn. intros k Hk. apply H. lra.
+    + apply H. lra.
+Qed.
 
 Lemma sum1_lt : forall (f g : nat -> R) (n : nat), (forall k : nat, 1 <= k <= n -> f k < g k) ->
     sum1 f n < sum1 g n.
-Proof. Admitted.
+Proof.
+  intros f g n H.
+  induction n.
+  - simpl. lra.
+  - simpl. apply Rplus_lt_gt_compat.
+    + apply IHn. intros k Hk. apply H. lra.
+    + apply H. lra.
+Qed.
 
 (* ====================================================================== *)
 (** ** sin 在 (0, π/2) 上严格递增 *)
