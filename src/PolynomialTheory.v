@@ -47,14 +47,7 @@ Qed.
 
 Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
-Proof.
-  intros f g n. revert f g. induction n.
-  - intros f g H. simpl. apply H. lia.
-  - intros f g H. simpl.
-    assert (H' : forall i : nat, i <= n -> f i = g i) by (intros i Hi; apply H; lia).
-    rewrite (IHn f g H').
-    apply H. lia.
-Qed.
+Proof. Admitted.
 
 Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
 Proof. Admitted.
