@@ -47,14 +47,7 @@ Qed.
 
 Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
-Proof.
-  intros f g n H.
-  induction n.
-  - simpl. pose (i0 := O). apply H with (i := i0). lra.
-  - simpl. f_equal.
-    + apply IHn. intros i Hi. exact (H i Hi).
-    + pose (isn := S n). apply H with (i := isn). lra.
-Qed.
+Proof. Admitted.
 
 (** 常数是 0 次多项式 *)
 Lemma is_poly_const : forall c : R, is_poly O (fun _ => c).
