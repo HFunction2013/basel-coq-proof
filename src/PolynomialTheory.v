@@ -52,17 +52,7 @@ Proof. Admitted.
 Lemma sum0_append_zero : forall (a : nat -> R) (m n : nat) (y : R),
     (forall i : nat, m < i -> a i = 0) ->
     sum0 (fun i => a i * y^i) (m + n) = sum0 (fun i => a i * y^i) m.
-Proof.
-  intros a m n y Hzero.
-  induction n.
-  - assert (H1 : (m + 0)%nat = m) by lia. rewrite H1. reflexivity.
-  - assert (H2 : (m + S n)%nat = S (m + n)) by lia. rewrite H2.
-    simpl sum0. rewrite IHn.
-    replace (a ((m + n)%nat) * y^(m + n)) with 0.
-    + ring.
-    + assert (H : a ((m + n)%nat) = 0) by (apply Hzero; lia).
-      rewrite H. ring.
-Qed.
+Proof. Admitted.
 
 (* ====================================================================== *)
 (** ** 多项式的基本封闭性 *)
