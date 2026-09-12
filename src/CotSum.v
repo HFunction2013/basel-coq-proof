@@ -24,7 +24,7 @@ Proof.
   induction n.
   - exfalso.
     destruct H as [Hle1 Hle0].
-    apply Nat.le_0_r in Hle0.
+    assert (Hk : k = 0). { apply Nat.le_0_r. exact Hle0. }
     subst.
     lia.
   - destruct (Nat.eq_dec k (S n)).
