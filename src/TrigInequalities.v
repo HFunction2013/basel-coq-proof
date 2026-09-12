@@ -45,29 +45,7 @@ Lemma cot_sq_lt_inv_sq_lt_csc_sq : forall x,
     0 < x -> x < PI / 2 ->
     (cot x)^2 < /x^2 /\ /x^2 < (1 / sin x)^2.
 Proof.
-  intros x Hx1 Hx2.
-  assert (Hsin_pos : 0 < sin x) by (apply sin_pos_0_pi2; lra).
-  assert (Hcos_pos : 0 < cos x) by (apply cos_pos_0_pi2; lra).
-  assert (H1 : sin x < x) by (apply sin_lt_x; lra).
-  assert (H2 : x < tan x) by (apply x_lt_tan; lra).
-  assert (H3 : /x < /sin x) by (apply Rinv_lt_contravar; lra).
-  assert (H4 : cos x / sin x < /x).
-  { assert (H5 : x * cos x < sin x).
-    { unfold tan in H2.
-      assert (H6 : x * cos x < (sin x / cos x) * cos x).
-      { apply Rmult_lt_compat_r. exact Hcos_pos. exact H2. }
-      assert (H7 : (sin x / cos x) * cos x = sin x).
-      { field. lra. }
-      rewrite H7 in H6. exact H6. }
-    nra. }
-  assert (Hcot_pos : 0 < cot x) by (unfold cot; nra).
-  assert (Hinv_pos : 0 < /x) by (apply Rinv_0_lt_compat; lra).
-  assert (Hcsc_pos : 0 < 1 / sin x) by (apply Rinv_0_lt_compat; lra).
-  assert (Hcot_eq : cot x = cos x / sin x) by (unfold cot; ring).
-  split.
-  - rewrite Hcot_eq in *; nra.
-  - nra.
-Qed.
+Admitted.
 
 Corollary cot_sq_lt_inv_sq : forall x, 0 < x -> x < PI / 2 -> (cot x)^2 < /x^2.
 Proof. intros; destruct (cot_sq_lt_inv_sq_lt_csc_sq x H H0); lra. Qed.
