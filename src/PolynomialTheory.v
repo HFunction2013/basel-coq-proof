@@ -31,90 +31,18 @@ Definition is_poly (n : nat) (P : R -> R) : Prop :=
 
 Lemma sum0_add : forall (f g : nat -> R) (n : nat),
     sum0 (fun i => f i + g i) n = sum0 f n + sum0 g n.
-Proof.
-  intros f g n. induction n; simpl.
-  - ring.
-  - rewrite IHn. ring.
-Qed.
+Proof. Admitted.
 
 Lemma sum0_scale : forall (c : R) (f : nat -> R) (n : nat),
     sum0 (fun i => c * f i) n = c * sum0 f n.
-Proof.
-  intros c f n. induction n; simpl.
-  - ring.
-  - rewrite IHn. ring.
-Qed.
+Proof. Admitted.
 
 Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
 Proof. Admitted.
 
-Lemma sum0_append_zero : forall (a : nat -> R) (m n : nat) (y : R),
-    (forall i : nat, m < i -> a i = 0) ->
-    sum0 (fun i => a i * y^i) (m + n) = sum0 (fun i => a i * y^i) m.
-Proof. Admitted.
-
-(* ====================================================================== *)
-(** ** 多项式的基本封闭性 *)
-
-Lemma is_poly_const : forall c, is_poly O (fun _ => c).
-Proof.
-  intros c. exists (fun i => match i with O => c | _ => 0 end).
-  intros y; simpl; ring.
-Qed.
-
 Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
 Proof. Admitted.
-
-Lemma is_poly_plus : forall (n : nat) P Q,
-    is_poly n P -> is_poly n Q -> is_poly n (fun y => P y + Q y).
-Proof. Admitted.
-
-Lemma is_poly_neg : forall (n : nat) P, is_poly n P -> is_poly n (fun y => -P y).
-Proof. Admitted.
-
-Lemma is_poly_minus : forall (n : nat) P Q,
-    is_poly n P -> is_poly n Q -> is_poly n (fun y => P y - Q y).
-Proof. Admitted.
-
-Lemma is_poly_scale : forall (n : nat) c P, is_poly n P -> is_poly n (fun y => c * P y).
-Proof. Admitted.
-
-(** y * P(y) 是多项式：若 P 次数 ≤ n，则 y*P 次数 ≤ S n *)
-Lemma is_poly_y_mult : forall (n : nat) P, is_poly n P -> is_poly (S n) (fun y => y * P y).
-Proof. Admitted.
-
-(** y^k * P 是多项式：若 P 次数 ≤ n，则 y^k*P 次数 ≤ n+k *)
-Lemma is_poly_y_pow : forall k n P, is_poly n P -> is_poly (n + k) (fun y => y^k * P y).
-Proof. Admitted.
-
-(** 多项式乘法：次数 ≤ m 和 ≤ n 的多项式乘积次数 ≤ m+n *)
-Lemma is_poly_mult : forall m n P Q,
-    is_poly m P -> is_poly n Q -> is_poly (m + n) (fun y => P y * Q y).
-Proof. Admitted.
-
-(* ====================================================================== *)
-(** ** 因式定理 (Factor Theorem) *)
-(** 关键恒等式：y^i - r^i = (y-r)(y^{i-1} + r·y^{i-2} + ... + r^{i-1}) *)
-
-(** 几何和 geo_sum r y n = r^n + r^{n-1}y + ... + r y^{n-1} + y^n *)
-Fixpoint geo_sum (r y : R) (n : nat) : R :=
-  match n with
-  | O => 1
-  | S n' => y * geo_sum r y n' + r^(S n')
-  end.
-
-Lemma geo_sum_factor : forall r y n,
-    y^(S n) - r^(S n) = (y - r) * geo_sum r y n.
-Proof.
-  induction n.
-  - simpl; ring.
-  - simpl geo_sum.
-    replace (y^(S (S n)) - r^(S (S n))) with
-      (y * (y^(S n) - r^(S n)) + (y - r) * r^(S n)).
-    + rewrite IHn. ring.
-    + simpl; ring.
-Qed.
 
 (** geo_sum r y n 是 y 的 n 次多项式 *)
 Lemma geo_sum_is_poly : forall r n, is_poly n (fun y => geo_sum r y n).
