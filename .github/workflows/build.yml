@@ -19,12 +19,19 @@ jobs:
         uses: coq-community/docker-coq-action@v1
         with:
           coq_version: ${{ matrix.coq_version }}
-          export: 'true'
+          before_script: |
+            startGroup "Fix permission issue (docker-coq known issue)"
+            sudo chown -R 1000:1000 .
+            endGroup
           custom_script: |
             coq_makefile -f _CoqProject -o CoqMakefile
             make -f CoqMakefile all
 
-      # 只有 8.20 才上传产物
+      # 还原权限，避免 cleanup 警告
+      - name: Revert permissions
+        if: ${{ always() }}
+        run: sudo chown -R 1001:116 .
+
       - name: Upload Coq 8.20 artifacts
         if: matrix.coq_version == '8.20'
         uses: actions/upload-artifact@v4
