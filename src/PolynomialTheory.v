@@ -11,6 +11,7 @@
 
 Require Import Coq.Reals.Reals.
 Require Import Coq.micromega.Lra.
+Require Import Coq.micromega.Lia.
 Require Import Coq.micromega.Psatz.
 Require Import Coq.Arith.Arith.
 Require Import Basics.
@@ -26,8 +27,8 @@ Definition is_poly (n : nat) (P : R -> R) : Prop :=
 (* ====================================================================== *)
 (** ** sum0 的辅助引理 *)
 
-Lemma sum0_ext : forall (f g : nat -> R) n,
-    (forall i, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
+Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
+    (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
 Proof.
   intros f g n H; induction n; simpl.
   - apply H; lra.
