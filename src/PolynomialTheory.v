@@ -61,7 +61,18 @@ Fixpoint geo_sum (r y : R) (n : nat) : R :=
 
 Lemma geo_sum_factor : forall r y n,
     y^(S n) - r^(S n) = (y - r) * geo_sum r y n.
-Proof. Admitted.
+Proof.
+  induction n.
+  - simpl. ring.
+  - simpl geo_sum.
+    assert (H1 : y^(S (S n)) = y * y^(S n)) by (simpl; ring).
+    assert (H2 : r^(S (S n)) = r * r^(S n)) by (simpl; ring).
+    rewrite H1, H2.
+    assert (H3 : y * y^(S n) - r * r^(S n) = y * (y^(S n) - r^(S n)) + (y - r) * r^(S n)) by ring.
+    rewrite H3.
+    rewrite IHn.
+    ring.
+Qed.
 
 (** geo_sum r y n 是 y 的 n 次多项式 *)
 Lemma geo_sum_is_poly : forall r n, is_poly n (fun y => geo_sum r y n).
