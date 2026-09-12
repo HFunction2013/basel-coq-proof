@@ -118,7 +118,7 @@ Proof.
   exists a.
   intro y.
   assert (H2 : (n + 1)%nat = S n).
-  { induction n. reflexivity. simpl. rewrite IHn. reflexivity. }
+  { apply Nat.add_1_r. }
   rewrite H2.
   exact (Ha y).
 Qed.
