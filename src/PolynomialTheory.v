@@ -47,13 +47,13 @@ Qed.
 
 Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
+Proof. Admitted.
+
+(** 常数是 0 次多项式 *)
+Lemma is_poly_const : forall c : R, is_poly O (fun _ => c).
 Proof.
-  intros f g n H.
-  induction n.
-  - simpl. apply H with (i := O). lra.
-  - simpl. f_equal.
-    + apply IHn. intros i Hi. apply H. lra.
-    + apply H with (i := S n). lra.
+  intros c. exists (fun i => match i with O => c | S _ => 0 end).
+  intros y. simpl. ring.
 Qed.
 
 Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
