@@ -1,17 +1,125 @@
+name: Coq CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
     container: coqorg/coq:8.20
+    strategy:
+      fail-fast: false
+      matrix:
+        coq_version: ['8.18', '8.19', '8.20']
+    
+    container:
+      image: coqorg/coq:${{ matrix.coq_version }}
+      options: --user root
+    
     steps:
-      - name: Install git
-        run: |
-          apt-get update
-          apt-get install -y git
-          
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整历史，便于版本对比
 
-      - name: Build
+      - name: Debug environment
         run: |
+          echo "=== System Info ==="
+          uname -a
+          echo "=== User ==="
+          whoami
+          echo "=== Coq version ==="
+          coqc --version
+          echo "=== Git version ==="
+          git --version
+          echo "=== Workspace ==="
+          pwd
+          ls -la
+
+      - name: Prepare build environment
+        run: |
+          # 确保有写权限
           chmod -R 777 .
+          # 检查 _CoqProject 是否存在
+          if [ ! -f _CoqProject ]; then
+            echo "Error: _CoqProject file not found!"
+            exit 1
+          fi
+
+      - name: Build with Coq ${{ matrix.coq_version }}
+        run: |
+          echo "Building with Coq ${{ matrix.coq_version }}..."
           coq_makefile -f _CoqProject -o CoqMakefile
           make -f CoqMakefile all
+
+      - name: Run tests (if any)
+        if: success()
+        run: |
+          # 如果有测试目标，运行它
+          if grep -q "^test:" CoqMakefile; then
+            make -f CoqMakefile test
+          else
+            echo "No test target found, skipping tests"
+          fi
+
+      - name: Upload artifacts for Coq 8.20
+        if: matrix.coq_version == '8.20' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coq-build-${{ matrix.coq_version }}
+          path: |
+            **/*.vo
+            **/*.glob
+            **/*.v
+            CoqMakefile
+            Makefile.coq*
+            !**/*.v~  # 排除备份文件
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Upload build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ matrix.coq_version }}
+          path: |
+            *.log
+            CoqMakefile
+          if-no-files-found: ignore
+          retention-days: 3
+
+  lint:
+    runs-on: ubuntu-latest
+    container: coqorg/coq:8.20
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check code style
+        run: |
+          # 检查是否有 tab 字符
+          if grep -rP '\t' --include='*.v' .; then
+            echo "Warning: Tab characters found in .v files"
+            exit 1
+          fi
+          echo "Style check passed"
+
+  summary:
+    needs: [build, lint]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check build status
+        run: |
+          echo "=== CI Summary ==="
+          echo "Build jobs: ${{ needs.build.result }}"
+          echo "Lint job: ${{ needs.lint.result }}"
+          
+          if [ "${{ needs.build.result }}" = "success" ] && [ "${{ needs.lint.result }}" = "success" ]; then
+            echo "✅ All checks passed!"
+          else
+            echo "❌ Some checks failed"
+            exit 1
+          fi
