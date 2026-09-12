@@ -47,22 +47,22 @@ Proof. Admitted.
 Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
 Proof. Admitted.
 
-Lemma is_poly_plus : forall n P Q,
+Lemma is_poly_plus : forall n : nat, P Q,
     is_poly n P -> is_poly n Q -> is_poly n (fun y => P y + Q y).
 Proof. Admitted.
 
-Lemma is_poly_neg : forall n P, is_poly n P -> is_poly n (fun y => -P y).
+Lemma is_poly_neg : forall n : nat, P, is_poly n P -> is_poly n (fun y => -P y).
 Proof. Admitted.
 
-Lemma is_poly_minus : forall n P Q,
+Lemma is_poly_minus : forall n : nat, P Q,
     is_poly n P -> is_poly n Q -> is_poly n (fun y => P y - Q y).
 Proof. Admitted.
 
-Lemma is_poly_scale : forall n c P, is_poly n P -> is_poly n (fun y => c * P y).
+Lemma is_poly_scale : forall n : nat, c P, is_poly n P -> is_poly n (fun y => c * P y).
 Proof. Admitted.
 
 (** y * P(y) 是多项式：若 P 次数 ≤ n，则 y*P 次数 ≤ S n *)
-Lemma is_poly_y_mult : forall n P, is_poly n P -> is_poly (S n) (fun y => y * P y).
+Lemma is_poly_y_mult : forall n : nat, P, is_poly n P -> is_poly (S n) (fun y => y * P y).
 Proof. Admitted.
 
 (** y^k * P 是多项式：若 P 次数 ≤ n，则 y^k*P 次数 ≤ n+k *)
@@ -93,7 +93,7 @@ Proof. Admitted.
 Lemma geo_sum_is_poly : forall r n, is_poly n (fun y => geo_sum r y n).
 Proof. Admitted.
 
-Lemma factor_theorem : forall n P r,
+Lemma factor_theorem : forall n : nat, P r,
     is_poly (S n) P -> P r = 0 ->
     exists Q, is_poly n Q /\ forall y, P y = (y - r) * Q y.
 Proof. Admitted.
@@ -101,7 +101,7 @@ Proof. Admitted.
 (* ====================================================================== *)
 (** ** 根的个数上界 *)
 
-Lemma poly_max_roots : forall n P,
+Lemma poly_max_roots : forall n : nat, P,
     is_poly n P ->
     (exists (r : nat -> R), (forall i j : nat, i < S n -> j < S n -> i <> j -> r i <> r j) /\
       (forall i : nat, i < S n -> P (r i) = 0)) ->
@@ -111,7 +111,7 @@ Proof. Admitted.
 (* ====================================================================== *)
 (** ** 多项式唯一性 *)
 
-Lemma poly_unique : forall n P Q,
+Lemma poly_unique : forall n : nat, P Q,
     is_poly n P -> is_poly n Q ->
     (exists (r : nat -> R),
       (forall i j : nat, i < S n -> j < S n -> i <> j -> r i <> r j) /\
@@ -123,7 +123,7 @@ Proof. Admitted.
 (** ** 乘积展开的一次项系数（韦达定理的倒数根形式）*)
 (** c · ∏_{k=1}^n (1 - y/r_k) = c - c·(Σ1/r_k)·y + y²·S(y) *)
 
-Lemma vieta_product_expansion : forall n c (r : nat -> R),
+Lemma vieta_product_expansion : forall n : nat, c (r : nat -> R),
     (forall k : nat, 1 <= k <= n -> r k <> 0) ->
     exists S : R -> R,
       (forall y, c * prod1 (fun k => 1 - y / r k) n =
@@ -139,7 +139,7 @@ Proof. Admitted.
     D1(y) = (b-c) + y(S-T)。D1 在所有非零点为 0，由多项式唯一性 D1≡0，
     故 D1(0) = b-c = 0。*)
 
-Lemma coeff_compare_general : forall n m a b c S T,
+Lemma coeff_compare_general : forall n : nat, m a b c S T,
     is_poly n S -> is_poly m T ->
     (forall y, a + b*y + y^2*S y = a + c*y + y^2*T y) ->
     b = c.
