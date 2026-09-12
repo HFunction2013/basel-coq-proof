@@ -1,0 +1,7 @@
+-R src Basel
+src/Basics.v
+src/TrigInequalities.v
+src/PolynomialTheory.v
+src/SinMultiple.v
+src/CotSum.v
+src/BaselProblem.v

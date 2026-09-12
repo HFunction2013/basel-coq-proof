@@ -1,0 +1,39 @@
+name: Coq Build
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Coq 8.20
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Coq project
+        uses: coq-community/docker-coq-action@v1
+        with:
+          coq_version: '8.20'
+          ocaml_version: '4.14-flambda'
+          custom_script: |
+            eval $(opam env)
+            coqc --version
+            coq_makefile -f _CoqProject -o CoqMakefile
+            make -f CoqMakefile all
+
+      - name: Upload compiled Coq files
+        uses: actions/upload-artifact@v4
+        with:
+          name: coq-compiled-${{ github.sha }}
+          path: |
+            **/*.vo
+            **/*.glob
+            CoqMakefile
+            Makefile.coq
+          if-no-files-found: warn
+          retention-days: 30
