@@ -113,11 +113,11 @@ Proof. Admitted.
 Lemma is_poly_succ_weaken : forall (n : nat) P, is_poly n P -> is_poly (S n) P.
 Proof.
   intros n P HP.
-  assert (H : is_poly (n + 1%nat) P) by (apply is_poly_weaken with (m := n) (n := 1%nat); exact HP).
+  assert (H : is_poly (n + 1)%nat P) by (apply is_poly_weaken with (m := n) (n := 1%nat); exact HP).
   destruct H as [a Ha].
   exists a.
   intro y.
-  assert (H2 : n + 1%nat = S n).
+  assert (H2 : (n + 1)%nat = S n).
   { induction n. reflexivity. simpl. rewrite IHn. reflexivity. }
   rewrite H2.
   exact (Ha y).
