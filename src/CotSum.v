@@ -23,8 +23,8 @@ Proof.
   intros f n k H Hfk.
   induction n.
   - exfalso.
+    destruct H as [Hle1 Hle0].
     assert (H1 : 0 <= INR k) by apply INR_nonneg.
-    assert (H2 : INR k <= 0). lra.
     assert (H3 : INR k = 0). lra.
     assert (H4 : k = 0). apply INR_eq. lra.
     lra.
