@@ -24,18 +24,11 @@ Proof.
   induction n.
   - exfalso.
     destruct H as [Hle1 Hle0].
-    assert (H1 : 0 <= INR k) by apply INR_nonneg.
-    assert (H3 : INR k = 0).
-    { apply Rle_antisym. exact Hle0. exact H1. }
-    assert (H4 : k = 0). apply INR_eq. lra.
-    lra.
+    lia.
   - destruct (Nat.eq_dec k (S n)).
     + subst. simpl. rewrite Hfk. ring.
-    + assert (Hk : (k < S n)%nat).
-      { apply INR_lt. lra. }
-      assert (Hk' : (k <= n)%nat).
-      { apply Nat.lt_succ_r. exact Hk. }
-      simpl. rewrite IHn; [|lra|exact Hfk]. ring.
+    + assert (Hk : (k <= n)%nat). lia.
+      simpl. rewrite IHn; [|lia|exact Hfk]. ring.
 Qed.
 
 Lemma sum1_ext : forall (f g : nat -> R) (n : nat), (forall k : nat, 1 <= k <= n -> f k = g k) ->
@@ -57,9 +50,7 @@ Lemma sum1_lt : forall (f g : nat -> R) (n : nat), 1 <= n ->
 Proof.
   intros f g n Hn H.
   induction n.
-  - exfalso.
-    assert (H1 : 0 <= INR 0) by apply INR_nonneg.
-    lra.
+  - exfalso. lia.
   - simpl.
     destruct n.
     + apply H. lra.
