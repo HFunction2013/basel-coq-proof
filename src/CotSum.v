@@ -25,7 +25,8 @@ Proof.
   - exfalso.
     destruct H as [Hle1 Hle0].
     assert (H1 : 0 <= INR k) by apply INR_nonneg.
-    assert (H3 : INR k = 0). lra.
+    assert (H3 : INR k = 0).
+    { apply Rle_antisym. exact Hle0. exact H1. }
     assert (H4 : k = 0). apply INR_eq. lra.
     lra.
   - destruct (Nat.eq_dec k (S n)).
