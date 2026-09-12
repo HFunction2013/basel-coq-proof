@@ -99,7 +99,7 @@ Qed.
 
 (** 辅助引理：sum0 移位 *)
 Lemma sum0_shift : forall (a : nat -> R) (n : nat) (y : R),
-    sum0 (fun i => match i with O => 0 | S j => a j end * y^i) (S n) =
+    sum0 (fun i => (match i with O => 0 | S j => a j end) * y^i) (S n) =
     y * sum0 (fun i => a i * y^i) n.
 Proof.
   intros a n y. induction n.
