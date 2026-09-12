@@ -19,16 +19,55 @@ Open Scope R_scope.
 (** ** 辅助引理 *)
 
 Lemma prod1_has_zero : forall (f : nat -> R) (n k : nat), 1 <= k <= n -> f k = 0 -> prod1 f n = 0.
-Proof. Admitted.
+Proof.
+  intros f n k H Hfk.
+  induction n.
+  - exfalso.
+    assert (H1 : 0 <= INR k) by apply INR_nonneg.
+    assert (H2 : INR k <= 0). lra.
+    assert (H3 : INR k = 0). lra.
+    assert (H4 : k = 0). apply INR_eq. lra.
+    lra.
+  - destruct (Nat.eq_dec k (S n)).
+    + subst. simpl. rewrite Hfk. ring.
+    + assert (Hk : (k < S n)%nat).
+      { apply INR_lt. lra. }
+      assert (Hk' : (k <= n)%nat).
+      { apply Nat.lt_succ_r. exact Hk. }
+      simpl. rewrite IHn; [|lra|exact Hfk]. ring.
+Qed.
 
 Lemma sum1_ext : forall (f g : nat -> R) (n : nat), (forall k : nat, 1 <= k <= n -> f k = g k) ->
     sum1 f n = sum1 g n.
-Proof. Admitted.
+Proof.
+  intros f g n H.
+  induction n.
+  - reflexivity.
+  - simpl.
+    assert (H' : forall k : nat, 1 <= k <= n -> f k = g k).
+    { intros k Hk. apply H. lra. }
+    rewrite (IHn H').
+    f_equal. apply H. lra.
+Qed.
 
 Lemma sum1_lt : forall (f g : nat -> R) (n : nat), 1 <= n ->
     (forall k : nat, 1 <= k <= n -> f k < g k) ->
     sum1 f n < sum1 g n.
-Proof. Admitted.
+Proof.
+  intros f g n Hn H.
+  induction n.
+  - exfalso.
+    assert (H1 : 0 <= INR 0) by apply INR_nonneg.
+    lra.
+  - simpl.
+    destruct n.
+    + apply H. lra.
+    + assert (H' : forall k : nat, 1 <= k <= S n -> f k < g k).
+      { intros k Hk. apply H. lra. }
+      assert (Hih : sum1 f (S n) < sum1 g (S n)) by (apply IHn; [lra|exact H']).
+      assert (Hlast : f (S (S n)) < g (S (S n))) by (apply H; lra).
+      lra.
+Qed.
 
 (* ====================================================================== *)
 (** ** sin 在 (0, π/2) 上严格递增 *)
