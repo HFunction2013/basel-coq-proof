@@ -80,13 +80,13 @@ Proof.
     split.
     + simpl.
       assert (H1 : is_poly (S n) (fun y : R => (1 - 2*y) * Q n y)).
-      { assert (H1a : is_poly (S n) (fun y : R => Q n y)) by (apply is_poly_weaken with (m := n) (n := 1); exact HQ).
+      { assert (H1a : is_poly (S n) (fun y : R => Q n y)) by (apply is_poly_weaken with (m := n) (n := 1%nat); exact HQ).
         assert (H1b : is_poly (S n) (fun y : R => 2*y * Q n y)).
         { assert (H1b1 : is_poly (S n) (fun y : R => y * Q n y)) by (apply is_poly_y_mult; exact HQ).
           apply is_poly_scale with (c := 2); exact H1b1. }
         apply is_poly_minus; [exact H1a | exact H1b]. }
       assert (H2 : is_poly (S n) (fun y : R => 2*(1-y) * Rpoly n y)).
-      { assert (H2a : is_poly (S n) (fun y : R => Rpoly n y)) by (apply is_poly_weaken with (m := n) (n := 1); exact HR).
+      { assert (H2a : is_poly (S n) (fun y : R => Rpoly n y)) by (apply is_poly_weaken with (m := n) (n := 1%nat); exact HR).
         assert (H2b : is_poly (S n) (fun y : R => 2*y * Rpoly n y)).
         { assert (H2b1 : is_poly (S n) (fun y : R => y * Rpoly n y)) by (apply is_poly_y_mult; exact HR).
           apply is_poly_scale with (c := 2); exact H2b1. }
@@ -95,7 +95,7 @@ Proof.
       apply is_poly_plus; [exact H1 | exact H2].
     + simpl.
       assert (H3 : is_poly (S n) (fun y : R => (1 - 2*y) * Rpoly n y)).
-      { assert (H3a : is_poly (S n) (fun y : R => Rpoly n y)) by (apply is_poly_weaken with (m := n) (n := 1); exact HR).
+      { assert (H3a : is_poly (S n) (fun y : R => Rpoly n y)) by (apply is_poly_weaken with (m := n) (n := 1%nat); exact HR).
         assert (H3b : is_poly (S n) (fun y : R => 2*y * Rpoly n y)).
         { assert (H3b1 : is_poly (S n) (fun y : R => y * Rpoly n y)) by (apply is_poly_y_mult; exact HR).
           apply is_poly_scale with (c := 2); exact H3b1. }
