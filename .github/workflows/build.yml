@@ -10,17 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-name: Coq CI
-
-on:
-  push:
-  pull_request:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
       matrix:
         coq_version: ['8.18', '8.19', '8.20']
     steps:
@@ -31,32 +20,6 @@ jobs:
         with:
           coq_version: ${{ matrix.coq_version }}
           export: 'true'
-          custom_script: |
-            coq_makefile -f _CoqProject -o CoqMakefile
-            make -f CoqMakefile all
-
-      # 只有 8.20 才上传产物
-      - name: Upload Coq 8.20 artifacts
-        if: matrix.coq_version == '8.20'
-        uses: actions/upload-artifact@v4
-        with:
-          name: coq-build-8.20
-          path: |
-            **/*.vo
-            **/*.glob
-            CoqMakefile
-            Makefile.coq*
-          if-no-files-found: warn
-          retention-days: 7      matrix:
-        coq_version: ['8.18', '8.19', '8.20']
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Build with Coq ${{ matrix.coq_version }}
-        uses: coq-community/docker-coq-action@v1
-        with:
-          coq_version: ${{ matrix.coq_version }}
-          ocaml_version: '4.14'
           custom_script: |
             coq_makefile -f _CoqProject -o CoqMakefile
             make -f CoqMakefile all
