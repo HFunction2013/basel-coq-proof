@@ -50,10 +50,10 @@ Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
 Proof.
   intros f g n H.
   induction n.
-  - simpl. eapply H. lra.
+  - simpl. pose (i0 := O). apply H with (i := i0). lra.
   - simpl. f_equal.
-    + apply IHn. intros i Hi. eapply H. lra.
-    + eapply H. lra.
+    + apply IHn. intros i Hi. exact (H i Hi).
+    + pose (isn := S n). apply H with (i := isn). lra.
 Qed.
 
 (** 常数是 0 次多项式 *)
