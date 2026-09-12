@@ -50,10 +50,10 @@ Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
 Proof.
   intros f g n H.
   induction n.
-  - simpl. apply H. lia.
+  - simpl. exact (H O (le_refl O)).
   - simpl. f_equal.
     + apply IHn. intros i Hi. apply H. lia.
-    + apply H. lia.
+    + exact (H (S n) (le_n (S n))).
 Qed.
 
 Lemma is_poly_weaken : forall m n P, is_poly m P -> is_poly (m + n) P.
