@@ -31,11 +31,19 @@ Definition is_poly (n : nat) (P : R -> R) : Prop :=
 
 Lemma sum0_add : forall (f g : nat -> R) (n : nat),
     sum0 (fun i => f i + g i) n = sum0 f n + sum0 g n.
-Proof. Admitted.
+Proof.
+  intros f g n. induction n.
+  - simpl. ring.
+  - simpl. rewrite IHn. ring.
+Qed.
 
 Lemma sum0_scale : forall (c : R) (f : nat -> R) (n : nat),
     sum0 (fun i => c * f i) n = c * sum0 f n.
-Proof. Admitted.
+Proof.
+  intros c f n. induction n.
+  - simpl. ring.
+  - simpl. rewrite IHn. ring.
+Qed.
 
 Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
