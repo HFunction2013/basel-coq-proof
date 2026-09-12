@@ -160,11 +160,11 @@ Proof. Admitted.
 Lemma product_coeffs : forall (n : nat) (r : nat -> R),
     exists (b : nat -> R),
       (forall y, prod1 (fun k => y - r k) n = sum0 (fun i => b i * y^i) n) /\
-      (n >= 1 -> b n = 1 /\ b (n - 1) = -sum1 r n).
+      (n >= 1 -> b n = 1 /\ b ((n - 1)%nat) = -sum1 r n).
 Proof. Admitted.
 
 Theorem vieta_sum_roots : forall (n : nat) (a : nat -> R) (roots : nat -> R),
     n >= 1 -> a n <> 0 ->
     (forall y, sum0 (fun i => a i * y^i) n = a n * prod1 (fun k => y - roots k) n) ->
-    sum1 (fun k => roots k) n = - a (n - 1) / a n.
+    sum1 (fun k => roots k) n = - a ((n - 1)%nat) / a n.
 Proof. Admitted.
