@@ -50,9 +50,9 @@ Qed.
 (* ====================================================================== *)
 (** ** 多项式的基本封闭性 *)
 
-Lemma is_poly_const : forall c, is_poly 0 (fun _ => c).
+Lemma is_poly_const : forall c, is_poly O (fun _ => c).
 Proof.
-  intros c. exists (fun i => match i with 0 => c | _ => 0 end).
+  intros c. exists (fun i => match i with O => c | _ => 0 end).
   intros y; simpl; ring.
 Qed.
 
@@ -115,7 +115,7 @@ Qed.
 Lemma is_poly_y_mult : forall n P, is_poly n P -> is_poly (S n) (fun y => y * P y).
 Proof.
   intros n P [a Ha].
-  set (b := fun i => match i with 0 => 0 | S j => a j end).
+  set (b := fun i => match i with O => 0 | S j => a j end).
   exists b.
   intros y.
   have H : sum0 (fun i => b i * y^i) (S n) = y * sum0 (fun i => a i * y^i) n.
@@ -143,12 +143,12 @@ Proof.
   - (* m = 0: P 是常数 *)
     intros n P Q [a Ha] HQ.
     have Hc : exists c, P = fun _ => c.
-    { exists (a 0). extensionality y.
-      have H : P y = a 0 by (rewrite Ha; simpl; ring).
+    { exists (a O). extensionality y.
+      have H : P y = a O by (rewrite Ha; simpl; ring).
       exact H. }
     destruct Hc as [c Hc].
     rewrite Hc. apply is_poly_scale with (n := n).
-    apply is_poly_weaken with (m := n) (n := 0). exact HQ.
+    apply is_poly_weaken with (m := n) (n := O). exact HQ.
   - (* m = S m' *)
     intros n P Q HP HQ.
     destruct HP as [a Ha].
@@ -180,7 +180,7 @@ Qed.
 (** 几何和 geo_sum r y n = r^n + r^{n-1}y + ... + r y^{n-1} + y^n *)
 Fixpoint geo_sum (r y : R) (n : nat) : R :=
   match n with
-  | 0 => 1
+  | O => 1
   | S n' => y * geo_sum r y n' + r^(S n')
   end.
 
@@ -205,7 +205,7 @@ Proof.
     have H1 : is_poly (S n) (fun y : R => y * geo_sum r y n).
     { apply is_poly_y_mult. apply IHn. }
     have H2 : is_poly (S n) (fun _ : R => r^(S n)).
-    { apply is_poly_weaken with (m := 0) (n := S n). apply is_poly_const. }
+    { apply is_poly_weaken with (m := O) (n := S n). apply is_poly_const. }
     apply is_poly_plus; exact H1 || exact H2.
 Qed.
 
@@ -245,7 +245,7 @@ Proof.
     have H4 : forall m, sum0 (fun i => a i * (y^i - r^i)) (S m) =
                       (y - r) * sum0 (fun i => a (S i) * geo_sum r y i) m.
     { induction m.
-      - simpl. have H5 : y^1 - r^1 = (y - r) * geo_sum r y 0 by (apply geo_sum_factor with (n := 0)).
+      - simpl. have H5 : y^(S O) - r^(S O) = (y - r) * geo_sum r y O by (apply geo_sum_factor with (n := O)).
         simpl in H5. ring_simplify in H5. nra.
       - simpl sum0. rewrite IHm.
         have H6 : y^(S (S m)) - r^(S (S m)) = (y - r) * geo_sum r y (S m) by (apply geo_sum_factor with (n := S m)).
@@ -264,21 +264,21 @@ Lemma poly_max_roots : forall n P,
 Proof.
   induction n.
   - intros P [a Ha] [r [Hdist Hroots]].
-    have H0 : P (r 0) = 0 by (apply Hroots; lra).
-    have H1 : forall y, P y = a 0.
+    have H0 : P (r O) = 0 by (apply Hroots; lra).
+    have H1 : forall y, P y = a O.
     { intros y; simpl in Ha; apply Ha. }
-    intros y; rewrite H1, <- H1 with (y := r 0), H0; ring.
+    intros y; rewrite H1, <- H1 with (y := r O), H0; ring.
   - intros P HP [r [Hdist Hroots]].
-    have Hfr : P (r 0) = 0 by (apply Hroots; lra).
-    destruct (factor_theorem n P (r 0) HP Hfr) as [Q [HQ Hfact]].
+    have Hfr : P (r O) = 0 by (apply Hroots; lra).
+    destruct (factor_theorem n P (r O) HP Hfr) as [Q [HQ Hfact]].
     have Qroots : forall i, i < S n -> Q (r (S i)) = 0.
     { intros i Hi.
       have H : P (r (S i)) = 0 by (apply Hroots; lra).
-      have H2 : P (r (S i)) = (r (S i) - r 0) * Q (r (S i)) by apply Hfact.
+      have H2 : P (r (S i)) = (r (S i) - r O) * Q (r (S i)) by apply Hfact.
       rewrite H2 in H.
-      have H3 : r (S i) <> r 0 by (apply Hdist; lra).
-      have H4 : r (S i) - r 0 <> 0 by (intro; apply H3; lra).
-      apply (Rmult_eq_reg_l (r (S i) - r 0) H4). lra. }
+      have H3 : r (S i) <> r O by (apply Hdist; lra).
+      have H4 : r (S i) - r O <> 0 by (intro; apply H3; lra).
+      apply (Rmult_eq_reg_l (r (S i) - r O) H4). lra. }
     have Qzero : forall y, Q y = 0.
     { apply IHn with (r := fun i => r (S i)); trivial.
       split; intros.
@@ -345,7 +345,7 @@ Proof.
       { apply is_poly_minus.
         - apply is_poly_minus.
           + exact H1.
-          + apply is_poly_scale with (n := n). apply is_poly_weaken with (m := 0) (n := n). apply is_poly_const.
+          + apply is_poly_scale with (n := n). apply is_poly_weaken with (m := O) (n := n). apply is_poly_const.
         - apply is_poly_scale with (n := n). exact H2. }
       unfold S' in *. exact H3.
 Qed.
@@ -386,7 +386,7 @@ Proof.
     have HST : is_poly K (fun y => S y - T y) by (apply is_poly_minus; exact HS' || exact HT').
     have HyST : is_poly (S K) (fun y => y * (S y - T y)) by (apply is_poly_y_mult; exact HST).
     have Hconst : is_poly (S K) (fun _ => b - c).
-    { apply is_poly_weaken with (m := 0) (n := S K). apply is_poly_const. }
+    { apply is_poly_weaken with (m := O) (n := S K). apply is_poly_const. }
     have Hsum : is_poly (S K) (fun y => (b - c) + y * (S y - T y)).
     { apply is_poly_plus; exact Hconst || exact HyST. }
     unfold K in Hsum. exact Hsum. }
@@ -418,15 +418,15 @@ Lemma all_coeffs_zero : forall n (c : nat -> R),
     forall i, i <= n -> c i = 0.
 Proof.
   induction n.
-  - intros c H i Hi. have H0 : c 0 = 0 by (have H1 := H 0; simpl in H1; lra).
-    have Hi0 : i = 0 by (inversion Hi; reflexivity). rewrite Hi0. exact H0.
+  - intros c H i Hi. have H0 : c O = 0 by (have H1 := H 0; simpl in H1; lra).
+    have Hi0 : i = O by (inversion Hi; reflexivity). rewrite Hi0. exact H0.
   - intros c H i Hi.
-    have Hc0 : c 0 = 0 by (have H1 := H 0; simpl in H1; lra).
+    have Hc0 : c O = 0 by (have H1 := H 0; simpl in H1; lra).
     (* 对 y ≠ 0：y * Σ_{j=0}^{n} c_{j+1} y^j = 0 ⇒ Σ c_{j+1} y^j = 0 *)
     set (d := fun j => c (S j)).
     have Hd_nonzero : forall y, y <> 0 -> sum0 (fun j => d j * y^j) n = 0.
     { intros y Hy.
-      have H2 : sum0 (fun k => c k * y^k) (S n) = c 0 + y * sum0 (fun j => d j * y^j) n.
+      have H2 : sum0 (fun k => c k * y^k) (S n) = c O + y * sum0 (fun j => d j * y^j) n.
       { induction n; simpl; [unfold d; simpl; ring | unfold d in *; simpl; rewrite IHn; ring]. }
       have H3 := H y. rewrite H2 in H3. rewrite Hc0 in H3.
       apply (Rmult_eq_reg_l y Hy). lra. }
@@ -457,14 +457,14 @@ Lemma product_coeffs : forall n (r : nat -> R),
       (n >= 1 -> b n = 1 /\ b (n - 1) = -sum1 r n).
 Proof.
   induction n.
-  - exists (fun i => match i with 0 => 1 | _ => 0 end).
+  - exists (fun i => match i with O => 1 | _ => 0 end).
     split.
     + intros y; simpl; ring.
     + intros H; exfalso; lra.
   - destruct IHn as [b [Hb Hbn]].
     (* 新系数 c_i：c_{n+1}=b_n, c_i = b_{i-1} - r_{n+1} b_i (1≤i≤n), c_0 = -r_{n+1} b_0 *)
     set (c := fun i => match i with
-           | 0 => -r (S n) * b 0
+           | O => -r (S n) * b O
            | S i => b i - r (S n) * b (S i)
            end).
     exists c.

@@ -16,21 +16,21 @@ Open Scope R_scope.
 (** [sum0 f n] = f(0) + f(1) + ... + f(n) *)
 Fixpoint sum0 (f : nat -> R) (n : nat) : R :=
   match n with
-  | 0 => f 0
+  | O => f O
   | S n' => sum0 f n' + f (S n')
   end.
 
 (** [sum1 f n] = f(1) + f(2) + ... + f(n)  （从 1 开始） *)
 Fixpoint sum1 (f : nat -> R) (n : nat) : R :=
   match n with
-  | 0 => 0
+  | O => 0
   | S n' => sum1 f n' + f (S n')
   end.
 
 (** [prod1 f n] = f(1) * f(2) * ... * f(n) *)
 Fixpoint prod1 (f : nat -> R) (n : nat) : R :=
   match n with
-  | 0 => 1
+  | O => 1
   | S n' => prod1 f n' * f (S n')
   end.
 
@@ -40,7 +40,7 @@ Fixpoint prod1 (f : nat -> R) (n : nat) : R :=
 Lemma sum1_S : forall f n, sum1 f (S n) = sum1 f n + f (S n).
 Proof. intros; simpl; ring. Qed.
 
-Lemma sum1_zero : forall f, sum1 f 0 = 0.
+Lemma sum1_zero : forall f, sum1 f O = 0.
 Proof. intros; simpl; ring. Qed.
 
 Lemma sum1_add : forall f g n,
@@ -84,7 +84,7 @@ Qed.
 Lemma prod1_S : forall f n, prod1 f (S n) = prod1 f n * f (S n).
 Proof. intros; simpl; ring. Qed.
 
-Lemma prod1_zero : forall f, prod1 f 0 = 1.
+Lemma prod1_zero : forall f, prod1 f O = 1.
 Proof. intros; simpl; ring. Qed.
 
 (* ====================================================================== *)

@@ -20,12 +20,12 @@ Open Scope R_scope.
 
 Fixpoint Q (n : nat) (y : R) : R :=
   match n with
-  | 0 => 1
+  | O => 1
   | S n' => (1 - 2*y) * Q n' y + 2*(1-y) * R n' y
   end
 with R (n : nat) (y : R) : R :=
   match n with
-  | 0 => 1
+  | O => 1
   | S n' => (1 - 2*y) * R n' y - 2*y * Q n' y
   end.
 
@@ -87,12 +87,12 @@ Proof.
   - split; simpl; apply is_poly_const.
   - destruct IHn as [HQ HR].
     (* 辅助：(1-2y), (1-y), y 都是一次多项式 *)
-    have Hpoly12 : is_poly 1 (fun y => 1 - 2*y).
-    { exists (fun i => match i with 0 => 1 | 1 => -2 | _ => 0 end). intros y; simpl; ring. }
-    have Hpoly1 : is_poly 1 (fun y => 1 - y).
-    { exists (fun i => match i with 0 => 1 | 1 => -1 | _ => 0 end). intros y; simpl; ring. }
-    have Hpolyy : is_poly 1 (fun y => y).
-    { exists (fun i => match i with 0 => 0 | 1 => 1 | _ => 0 end). intros y; simpl; ring. }
+    have Hpoly12 : is_poly (S O) (fun y => 1 - 2*y).
+    { exists (fun i => match i with O => 1 | S O => -2 | _ => 0 end). intros y; simpl; ring. }
+    have Hpoly1 : is_poly (S O) (fun y => 1 - y).
+    { exists (fun i => match i with O => 1 | S O => -1 | _ => 0 end). intros y; simpl; ring. }
+    have Hpolyy : is_poly (S O) (fun y => y).
+    { exists (fun i => match i with O => 0 | S O => 1 | _ => 0 end). intros y; simpl; ring. }
     split.
     + (* Q_{n+1}(y) = (1-2y)Q_n(y) + 2(1-y)R_n(y) *)
       simpl.
@@ -212,10 +212,10 @@ Proof.
           lra. }
         exact Hcalc.
       * (* Tq' 是多项式：由 Tq, Tr, 常数, y 经 +,-,* 组成 *)
-        have Hpoly12 : is_poly 1 (fun y => 1 - 2*y).
-        { exists (fun i => match i with 0 => 1 | 1 => -2 | _ => 0 end). intros y; simpl; ring. }
-        have Hpoly1 : is_poly 1 (fun y => 1 - y).
-        { exists (fun i => match i with 0 => 1 | 1 => -1 | _ => 0 end). intros y; simpl; ring. }
+        have Hpoly12 : is_poly (S O) (fun y => 1 - 2*y).
+        { exists (fun i => match i with O => 1 | S O => -2 | _ => 0 end). intros y; simpl; ring. }
+        have Hpoly1 : is_poly (S O) (fun y => 1 - y).
+        { exists (fun i => match i with O => 1 | S O => -1 | _ => 0 end). intros y; simpl; ring. }
         have H1 : is_poly (S n) (fun y => (1 - 2*y) * Tq y).
         { have Hm : is_poly (1 + n) (fun y => (1 - 2*y) * Tq y) by (apply is_poly_mult; exact Hpoly12 || exact Hqpoly).
           have Heq : 1 + n = S n by ring. rewrite Heq in Hm. exact Hm. }
@@ -224,7 +224,7 @@ Proof.
           have Heq : 1 + n = S n by ring. rewrite Heq in Hm.
           apply is_poly_scale with (n := S n). exact Hm. }
         have Hconst : is_poly (S n) (fun _ => -2*(2*INR n+1) - 2*(-2*INR n*(INR n+1))).
-        { apply is_poly_weaken with (m := 0) (n := S n). apply is_poly_const. }
+        { apply is_poly_weaken with (m := O) (n := S n). apply is_poly_const. }
         unfold Tq'. apply is_poly_minus.
         - apply is_poly_plus; exact H1 || exact H2.
         - exact Hconst.
@@ -243,10 +243,10 @@ Proof.
           lra. }
         exact Hcalc.
       * (* Tr' 是多项式 *)
-        have Hpoly12 : is_poly 1 (fun y => 1 - 2*y).
-        { exists (fun i => match i with 0 => 1 | 1 => -2 | _ => 0 end). intros y; simpl; ring. }
-        have Hpolyy : is_poly 1 (fun y => y).
-        { exists (fun i => match i with 0 => 0 | 1 => 1 | _ => 0 end). intros y; simpl; ring. }
+        have Hpoly12 : is_poly (S O) (fun y => 1 - 2*y).
+        { exists (fun i => match i with O => 1 | S O => -2 | _ => 0 end). intros y; simpl; ring. }
+        have Hpolyy : is_poly (S O) (fun y => y).
+        { exists (fun i => match i with O => 0 | S O => 1 | _ => 0 end). intros y; simpl; ring. }
         have H1 : is_poly (S n) (fun y => (1 - 2*y) * Tr y).
         { have Hm : is_poly (1 + n) (fun y => (1 - 2*y) * Tr y) by (apply is_poly_mult; exact Hpoly12 || exact Hrpoly).
           have Heq : 1 + n = S n by ring. rewrite Heq in Hm. exact Hm. }
@@ -255,7 +255,7 @@ Proof.
           have Heq : 1 + n = S n by ring. rewrite Heq in Hm.
           apply is_poly_scale with (n := S n). exact Hm. }
         have Hconst : is_poly (S n) (fun _ => -2 - 2*(2*INR n+1)).
-        { apply is_poly_weaken with (m := 0) (n := S n). apply is_poly_const. }
+        { apply is_poly_weaken with (m := O) (n := S n). apply is_poly_const. }
         unfold Tr'. apply is_poly_minus.
         - apply is_poly_minus; exact H1 || exact H2.
         - exact Hconst.

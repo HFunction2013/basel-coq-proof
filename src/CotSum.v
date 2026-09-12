@@ -154,8 +154,8 @@ Proof.
   - simpl; apply is_poly_const.
   - simpl.
     have H1 : is_poly n (fun y => prod1 (fun k => 1 - y / r k) n) by exact IHn.
-    have H2 : is_poly 1 (fun y => 1 - y / r (S n)).
-    { exists (fun i => match i with 0 => 1 | 1 => -/r (S n) | _ => 0 end).
+    have H2 : is_poly (S O) (fun y => 1 - y / r (S n)).
+    { exists (fun i => match i with O => 1 | S O => -/r (S n) | _ => 0 end).
       intros y; simpl; ring. }
     have H3 : is_poly (S n) (fun y => prod1 (fun k => 1 - y / r k) n * (1 - y / r (S n))).
     { apply is_poly_mult with (m := n) (n := 1); exact H1 || exact H2. }
@@ -173,10 +173,10 @@ Proof.
   have HPpoly : is_poly n P by (unfold P; apply Q_is_poly).
   have HRpoly : is_poly n Rprod.
   { unfold Rprod. apply is_poly_scale with (n := n).
-    apply is_poly_weaken with (m := n) (n := 0). apply product_is_poly. }
+    apply is_poly_weaken with (m := n) (n := O). apply product_is_poly. }
   set (pts := fun i : nat =>
     match i with
-    | 0 => 0
+    | O => 0
     | S k => r (S k)
     end).
   have Hdist : forall i j, i < S n -> j < S n -> i <> j -> pts i <> pts j.
