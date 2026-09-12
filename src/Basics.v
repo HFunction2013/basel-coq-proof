@@ -112,5 +112,11 @@ Qed.
 (** 若 0 < a < b，则 1/b < 1/a *)
 Lemma Rinv_lt_contravar : forall a b, 0 < a -> a < b -> /b < /a.
 Proof.
-  intros; nra.
+  intros a b Ha Hab.
+  have Hb : 0 < b by lra.
+  have Hpos : 0 < a * b by nra.
+  have H : a * / (a * b) < b * / (a * b).
+  { apply Rmult_lt_compat_r; [lra|lra]. }
+  field_simplify in H.
+  lra.
 Qed.
