@@ -23,7 +23,7 @@ Proof.
   intros f n k H Hfk.
   induction n.
   - exfalso.
-    assert (H1 : 0 <= INR k). apply le_INR. lia.
+    assert (H1 : 0 <= INR k). apply Rle_0_nat.
     assert (H2 : INR k <= 0). lra.
     assert (H3 : INR k = 0). lra.
     assert (H4 : k = 0). apply INR_eq. lra.
