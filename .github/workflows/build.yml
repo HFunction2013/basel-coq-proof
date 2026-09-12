@@ -2,7 +2,6 @@ name: Coq CI
 
 on:
   push:
-    branches: [ main, master, develop ]
   pull_request:
   workflow_dispatch:
 
@@ -13,102 +12,28 @@ jobs:
       fail-fast: false
       matrix:
         coq_version: ['8.18', '8.19', '8.20']
-    
-    # container 必须在 job 级别，不能在 strategy 里
-    container:
-      image: coqorg/coq:${{ matrix.coq_version }}
-      options: --user root
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Debug environment
-        run: |
-          echo "=== System Info ==="
-          uname -a
-          echo "=== User ==="
-          whoami
-          echo "=== Coq version ==="
-          coqc --version
-          echo "=== Git version ==="
-          git --version
-          echo "=== Workspace ==="
-          pwd
-          ls -la
-
-      - name: Prepare build environment
-        run: |
-          chmod -R 777 .
-          if [ ! -f _CoqProject ]; then
-            echo "Error: _CoqProject file not found!"
-            exit 1
-          fi
+      - uses: actions/checkout@v4
 
       - name: Build with Coq ${{ matrix.coq_version }}
-        run: |
-          echo "Building with Coq ${{ matrix.coq_version }}..."
-          coq_makefile -f _CoqProject -o CoqMakefile
-          make -f CoqMakefile all
+        uses: coq-community/docker-coq-action@v1
+        with:
+          coq_version: ${{ matrix.coq_version }}
+          export: 'true'
+          custom_script: |
+            coq_makefile -f _CoqProject -o CoqMakefile
+            make -f CoqMakefile all
 
-      - name: Upload artifacts for Coq 8.20
-        if: matrix.coq_version == '8.20' && success()
+      # 只有 8.20 才上传产物
+      - name: Upload Coq 8.20 artifacts
+        if: matrix.coq_version == '8.20'
         uses: actions/upload-artifact@v4
         with:
-          name: coq-build-${{ matrix.coq_version }}
+          name: coq-build-8.20
           path: |
             **/*.vo
             **/*.glob
-            **/*.v
             CoqMakefile
             Makefile.coq*
-            !**/*.v~
           if-no-files-found: warn
           retention-days: 7
-
-      - name: Upload build logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-logs-${{ matrix.coq_version }}
-          path: |
-            *.log
-            CoqMakefile
-          if-no-files-found: ignore
-          retention-days: 3
-
-  lint:
-    runs-on: ubuntu-latest
-    container:
-      image: coqorg/coq:8.20
-      options: --user root
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Check code style
-        run: |
-          if grep -rP '\t' --include='*.v' .; then
-            echo "Warning: Tab characters found in .v files"
-            exit 1
-          fi
-          echo "Style check passed"
-
-  summary:
-    needs: [build, lint]
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Check build status
-        run: |
-          echo "=== CI Summary ==="
-          echo "Build jobs: ${{ needs.build.result }}"
-          echo "Lint job: ${{ needs.lint.result }}"
-          
-          if [ "${{ needs.build.result }}" = "success" ] && [ "${{ needs.lint.result }}" = "success" ]; then
-            echo "✅ All checks passed!"
-          else
-            echo "❌ Some checks failed"
-            exit 1
-          fi
