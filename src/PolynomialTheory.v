@@ -49,7 +49,7 @@ Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
 Proof.
   intros f g n H. revert H. induction n.
-  - intros H. simpl. assert (Hle : 0 <= 0) by lra. exact (H 0 Hle).
+  - intros H. simpl. assert (Hle : (0 : R) <= 0) by lra. exact (H O Hle).
   - intros H. simpl. rewrite IHn.
     + assert (Hle : S n <= S n) by lra. exact (H (S n) Hle).
     + intros i Hi. apply H. lra.
