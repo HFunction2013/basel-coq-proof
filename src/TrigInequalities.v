@@ -7,7 +7,7 @@
 Require Import Coq.Reals.Reals.
 Require Import Coq.Reals.Rtrigo.
 Require Import Coq.Reals.Ranalysis.
-Require Import Coq.Reals.RiemannInt.
+Require Import Coq.Reals.MVT.
 Require Import Coq.micromega.Lra.
 Require Import Coq.micromega.Psatz.
 Require Import Basics.

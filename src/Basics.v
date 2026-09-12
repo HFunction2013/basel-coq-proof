@@ -7,7 +7,6 @@ Require Import Coq.Reals.Rtrigo.
 Require Import Coq.micromega.Lra.
 Require Import Coq.micromega.Psatz.
 Require Import Coq.Arith.Arith.
-Require Import Coq.Numbers.NatInt.
 
 Open Scope R_scope.
 

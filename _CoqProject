@@ -1,4 +1,3 @@
--Q /home/coq/.opam/4.13.1+flambda/lib/coq/user-contrib/Bignums Bignums
 -R src Basel
 src/Basics.v
 src/TrigInequalities.v

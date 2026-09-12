@@ -53,14 +53,6 @@ jobs:
           coq_version: ${{ matrix.coq_version }}
           custom_script: |
             {{before_script}}
-            startGroup "find bignums"
-            BIGNUMS_DIR=$(find /home/coq/.opam -type d -name "Bignums" 2>/dev/null | head -1)
-            echo "Found Bignums at: $BIGNUMS_DIR"
-            if [ -z "$BIGNUMS_DIR" ]; then
-              echo "Bignums not found, checking opam..."
-              opam list coq-bignums
-            fi
-            endGroup
             startGroup "gen makefile"
             coq_makefile -f _CoqProject -o CoqMakefile
             endGroup
