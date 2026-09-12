@@ -50,24 +50,14 @@ Proof.
   assert (Hcos_pos : 0 < cos x) by (apply cos_pos_0_pi2; assumption).
   assert (Hsin_lt_x : sin x < x) by (apply sin_lt_x; assumption).
   assert (Hx_lt_tan : x < tan x) by (apply x_lt_tan; assumption).
-  assert (Hcot_def : cot x = cos x / sin x) by (unfold cot; field).
-  assert (Htan_def : tan x = sin x / cos x) by (unfold tan; field).
   assert (Hcot_lt_inv : cot x < /x).
-  { rewrite Hcot_def, Htan_def in Hx_lt_tan.
-    assert (H : x * cos x < sin x).
-    { apply Rmult_lt_reg_l with (r := cos x); [lra |].
-      rewrite <- Hx_lt_tan. field. }
-    apply Rdiv_lt_lt; try lra.
-    apply Rmult_lt_reg_l with (r := sin x); [lra |].
-    rewrite <- H. field. }
+  { unfold cot, tan in *. nra. }
   assert (Hinv_lt_csc : /x < 1 / sin x).
-  { apply Rdiv_lt_lt; try lra.
-    apply Rmult_lt_reg_l with (r := x); [lra |].
-    rewrite <- Hsin_lt_x. field. }
+  { nra. }
   assert (H1 : (cot x)^2 < /x^2).
-  { apply Rmult_lt_lt; lra. }
+  { nra. }
   assert (H2 : /x^2 < (1 / sin x)^2).
-  { apply Rmult_lt_lt; lra. }
+  { nra. }
   split; assumption.
 Qed.
 
