@@ -1,5 +1,5 @@
 -R src Basel
--Q $(opam var coq-bignums:lib)/coq/user-contrib/Bignums Bignums
+-Q /home/coq/.opam/4.13.1+flambda/lib/coq/user-contrib/Bignums Bignums
 src/Basics.v
 src/TrigInequalities.v
 src/PolynomialTheory.v
