@@ -49,9 +49,9 @@ Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
 Proof.
   intros f g n H. induction n.
-  - simpl. have Hle : 0 <= 0 by lia. exact (H 0 Hle).
+  - simpl. assert (Hle : 0 <= 0) by lia. exact (H 0 Hle).
   - simpl. rewrite IHn.
-    + have Hle : S n <= S n by lia. exact (H (S n) Hle).
+    + assert (Hle : S n <= S n) by lia. exact (H (S n) Hle).
     + intros i Hi. apply H. lia.
 Qed.
 
@@ -66,7 +66,7 @@ Proof.
     simpl sum0. rewrite IHn.
     replace (a (m + n) * y^(m + n)) with 0.
     + ring.
-    + have H : a (m + n) = 0 by (apply Hzero; lia).
+    + assert (H : a (m + n) = 0) by (apply Hzero; lia).
       rewrite H. ring.
 Qed.
 
@@ -119,7 +119,7 @@ Lemma is_poly_minus : forall (n : nat) P Q,
     is_poly n P -> is_poly n Q -> is_poly n (fun y => P y - Q y).
 Proof.
   intros n P Q HP HQ.
-  have H : is_poly n (fun y => P y + (-Q y)) by (apply is_poly_plus; [exact HP | apply is_poly_neg; exact HQ]).
+  assert (H : is_poly n (fun y => P y + (-Q y))) by (apply is_poly_plus; [exact HP | apply is_poly_neg; exact HQ]).
   have H2 : (fun y : R => P y + (-Q y)) = (fun y : R => P y - Q y).
   { extensionality y; ring. }
   rewrite H2 in H. exact H.
