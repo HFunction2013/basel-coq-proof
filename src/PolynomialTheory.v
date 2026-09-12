@@ -54,7 +54,9 @@ Proof.
     assert (H' : forall i : nat, i <= n -> f i = g i).
     { intros i Hi. apply H. lra. }
     rewrite (IHn H').
-    + assert (Hle : S n <= S n) by lra. exact (H (S n) Hle).
+    assert (Hle : S n <= S n) by lra.
+    assert (Hfg : f (S n) = g (S n)) := H (S n) Hle.
+    rewrite Hfg. reflexivity.
 Qed.
 
 Lemma sum0_append_zero : forall (a : nat -> R) (m n : nat) (y : R),
