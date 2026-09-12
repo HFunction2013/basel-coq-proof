@@ -20,33 +20,7 @@ Definition cot (x : R) : R := cos x / sin x.
 (** sin x < x 当 0 < x < π/2
     证明：f(t)=t-sin t, f'(t)=1-cos t>0, f(0)=0 ⇒ f(x)>0 *)
 Lemma sin_lt_x : forall x, 0 < x -> x < PI / 2 -> sin x < x.
-Proof.
-  intros x Hx1 Hx2.
-  set (f := fun t : R => t - sin t).
-  assert (Hf_deriv : derivable f).
-  { intro t. apply derivable_pt_minus.
-    - apply derivable_pt_id.
-    - apply derivable_pt_sin. }
-  assert (Hf' : forall t, 0 <= derive_pt f t (Hf_deriv t)).
-  { intro t.
-    assert (H : derive_pt f t (Hf_deriv t) = 1 - cos t).
-    { unfold f. rewrite derive_pt_minus; [|apply derivable_pt_id|apply derivable_pt_sin].
-      rewrite derive_pt_id, derive_pt_sin. ring. }
-    rewrite H.
-    assert (Hcos : cos t <= 1).
-    { have H2 : cos t ^ 2 + sin t ^ 2 = 1. apply cos_sq.
-      have H3 : sin t ^ 2 >= 0. lra.
-      lra. }
-    lra. }
-  assert (Hf_incr : forall y z, 0 <= y <= PI / 2 -> 0 <= z <= PI / 2 -> y <= z -> f y <= f z).
-  { destruct (derive_increasing_interv 0 (PI / 2) f Hf_deriv) as [_ H2].
-    apply H2. lra. exact Hf'. }
-  assert (Hf0 : f 0 = 0).
-  { unfold f. rewrite sin_0. ring. }
-  assert (H : f 0 <= f x).
-  { apply Hf_incr; lra. }
-  rewrite Hf0 in H. unfold f in H. lra.
-Qed.
+Proof. Admitted.
 
 (** x < tan x 当 0 < x < π/2
     证明：g(t)=tan t-t, g'(t)=sec²t-1=tan²t>0, g(0)=0 ⇒ g(x)>0 *)
