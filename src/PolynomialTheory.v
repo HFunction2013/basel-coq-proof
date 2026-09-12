@@ -97,8 +97,24 @@ Proof.
   apply is_poly_plus; [exact HP | exact Hneg].
 Qed.
 
+(** 辅助引理：sum0 移位 *)
+Lemma sum0_shift : forall (a : nat -> R) (n : nat) (y : R),
+    sum0 (fun i => match i with O => 0 | S j => a j end * y^i) (S n) =
+    y * sum0 (fun i => a i * y^i) n.
+Proof.
+  intros a n y. induction n.
+  - simpl. ring.
+  - simpl sum0. rewrite IHn. ring.
+Qed.
+
 Lemma is_poly_y_mult : forall (n : nat) P, is_poly n P -> is_poly (S n) (fun y => y * P y).
-Proof. Admitted.
+Proof.
+  intros n P [a Ha].
+  exists (fun i => match i with O => 0 | S j => a j end).
+  intros y.
+  rewrite (sum0_shift a n y).
+  rewrite Ha. ring.
+Qed.
 
 Lemma is_poly_y_pow : forall k n P, is_poly n P -> is_poly (n + k) (fun y => y^k * P y).
 Proof. Admitted.
