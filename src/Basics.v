@@ -43,6 +43,13 @@ Proof. intros; simpl; ring. Qed.
 Lemma sum1_zero : forall f, sum1 f O = 0.
 Proof. intros; simpl; ring. Qed.
 
+(** INR 递推引理：Coq 标准库中 INR 定义有 S O 特殊分支，
+    simpl 无法在变量下化简，故显式证明。*)
+Lemma INR_S : forall n : nat, INR (S n) = INR n + 1.
+Proof.
+  intros n. destruct n; simpl; ring.
+Qed.
+
 Lemma sum1_add : forall f g n,
     sum1 (fun k => f k + g k) n = sum1 f n + sum1 g n.
 Proof.
@@ -88,16 +95,6 @@ Proof. intros; simpl; ring. Qed.
 
 Lemma prod1_zero : forall f, prod1 f O = 1.
 Proof. intros; simpl; ring. Qed.
-
-(* ====================================================================== *)
-(** ** INR 递推引理 *)
-(** Coq 标准库中 INR 定义有 S O 特殊分支，simpl 无法在变量下化简，
-    故显式证明 INR (S n) = INR n + 1。*)
-
-Lemma INR_S : forall n : nat, INR (S n) = INR n + 1.
-Proof.
-  intros n. destruct n; simpl; ring.
-Qed.
 
 (* ====================================================================== *)
 (** ** 自然数平方和公式：sum_{k=1}^n k^2 = n(n+1)(2n+1)/6 *)
