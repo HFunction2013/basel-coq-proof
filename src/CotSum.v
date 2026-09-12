@@ -15,6 +15,13 @@ Require Import SinMultiple.
 
 Open Scope R_scope.
 
+Lemma INR_nonneg : forall (n : nat), 0 <= INR n.
+Proof.
+  intro n. induction n.
+  - lra.
+  - simpl. assert (H : 0 <= INR n) by exact IHn. lra.
+Qed.
+
 (* ====================================================================== *)
 (** ** 辅助引理 *)
 
@@ -23,8 +30,7 @@ Proof.
   intros f n k H Hfk.
   induction n.
   - exfalso.
-    assert (H1 : 0 <= INR k).
-    { induction k; [lra|simpl; lra]. }
+    assert (H1 : 0 <= INR k) by apply INR_nonneg.
     assert (H2 : INR k <= 0). lra.
     assert (H3 : INR k = 0). lra.
     assert (H4 : k = 0). apply INR_eq. lra.
