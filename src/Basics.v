@@ -135,7 +135,8 @@ Lemma INR_nonneg : forall (n : nat), 0 <= INR n.
 Proof.
   intro n. induction n.
   - simpl. lra.
-  - simpl. assert (H : 0 <= INR n) by exact IHn.
+  - rewrite S_INR.
+    assert (H : 0 <= INR n) by exact IHn.
     assert (H2 : 0 <= INR n + 1).
     { apply Rplus_le_le_0_compat. exact H. lra. }
     exact H2.
