@@ -112,5 +112,5 @@ Qed.
 (** 若 0 < a < b，则 1/b < 1/a *)
 Lemma Rinv_lt_contravar : forall a b, 0 < a -> a < b -> /b < /a.
 Proof.
-  intros; apply Rinv_lt; lra.
+  intros; nra.
 Qed.
