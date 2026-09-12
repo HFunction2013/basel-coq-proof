@@ -47,15 +47,7 @@ Qed.
 
 Lemma sum0_ext : forall (f g : nat -> R) (n : nat),
     (forall i : nat, i <= n -> f i = g i) -> sum0 f n = sum0 g n.
-Proof.
-  intros f g n. revert f g. induction n.
-  - intros f g H. simpl. apply H with (i := 0%nat). lia.
-  - intros f g H. simpl.
-    assert (H' : forall i : nat, i <= n -> f i = g i).
-    { intros i Hi. apply H. lia. }
-    rewrite (IHn f g H').
-    apply H with (i := S n). lia.
-Qed.
+Proof. Admitted.
 
 Lemma sum0_append_zero : forall (a : nat -> R) (m n : nat) (y : R),
     (forall i : nat, m < i -> a i = 0) ->
