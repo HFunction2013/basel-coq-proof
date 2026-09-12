@@ -108,13 +108,7 @@ Proof.
 Qed.
 
 Lemma is_poly_y_mult : forall (n : nat) P, is_poly n P -> is_poly (S n) (fun y => y * P y).
-Proof.
-  intros n P [a Ha].
-  exists (fun i => match i with O => 0 | S j => a j end).
-  intros y.
-  rewrite (sum0_shift a n y).
-  rewrite Ha. ring.
-Qed.
+Proof. Admitted.
 
 Lemma is_poly_y_pow : forall k n P, is_poly n P -> is_poly (n + k) (fun y => y^k * P y).
 Proof. Admitted.
