@@ -99,15 +99,14 @@ Qed.
 (** ** 常用实数引理 *)
 
 Lemma R_sqr_nonneg : forall x : R, x^2 >= 0.
-Proof. intros; apply Rle_0_sqr. Qed.
+Proof. intros; nra. Qed.
 
 Lemma Rinv_pos : forall x, 0 < x -> 0 < /x.
 Proof. intros; apply Rinv_0_lt_compat; lra. Qed.
 
 Lemma Rsqr_inv_pos : forall x, x <> 0 -> 0 < /x^2.
 Proof.
-  intros; apply Rinv_0_lt_compat.
-  apply Rlt_0_sqr; lra.
+  intros x Hx. apply Rinv_0_lt_compat. nra.
 Qed.
 
 (** 若 0 < a < b，则 1/b < 1/a *)
