@@ -101,7 +101,16 @@ Lemma is_poly_y_mult : forall (n : nat) P, is_poly n P -> is_poly (S n) (fun y =
 Proof. Admitted.
 
 Lemma is_poly_y_pow : forall k n P, is_poly n P -> is_poly (n + k) (fun y => y^k * P y).
-Proof. Admitted.
+Proof.
+  induction k.
+  - intros n P HP.
+    assert (H : (n + 0)%nat = n) by lia.
+    rewrite H. exact HP.
+  - intros n P HP.
+    assert (H : (n + S k)%nat = S (n + k)) by lia.
+    rewrite H.
+    apply is_poly_y_mult. apply IHk. exact HP.
+Qed.
 
 Lemma is_poly_mult : forall m n P Q,
     is_poly m P -> is_poly n Q -> is_poly (m + n) (fun y => P y * Q y).
