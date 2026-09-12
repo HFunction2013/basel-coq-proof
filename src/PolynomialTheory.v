@@ -103,8 +103,8 @@ Proof. Admitted.
 
 Lemma poly_max_roots : forall n P,
     is_poly n P ->
-    (exists (r : nat -> R), (forall i j, i < S n -> j < S n -> i <> j -> r i <> r j) /\
-      (forall i, i < S n -> P (r i) = 0)) ->
+    (exists (r : nat -> R), (forall i j : nat, i < S n -> j < S n -> i <> j -> r i <> r j) /\
+      (forall i : nat, i < S n -> P (r i) = 0)) ->
     forall y, P y = 0.
 Proof. Admitted.
 
@@ -114,8 +114,8 @@ Proof. Admitted.
 Lemma poly_unique : forall n P Q,
     is_poly n P -> is_poly n Q ->
     (exists (r : nat -> R),
-      (forall i j, i < S n -> j < S n -> i <> j -> r i <> r j) /\
-      (forall i, i < S n -> P (r i) = Q (r i))) ->
+      (forall i j : nat, i < S n -> j < S n -> i <> j -> r i <> r j) /\
+      (forall i : nat, i < S n -> P (r i) = Q (r i))) ->
     forall y, P y = Q y.
 Proof. Admitted.
 
@@ -124,7 +124,7 @@ Proof. Admitted.
 (** c · ∏_{k=1}^n (1 - y/r_k) = c - c·(Σ1/r_k)·y + y²·S(y) *)
 
 Lemma vieta_product_expansion : forall n c (r : nat -> R),
-    (forall k, 1 <= k <= n -> r k <> 0) ->
+    (forall k : nat, 1 <= k <= n -> r k <> 0) ->
     exists S : R -> R,
       (forall y, c * prod1 (fun k => 1 - y / r k) n =
                   c - c * (sum1 (fun k => 1 / r k) n) * y + y^2 * S y) /\
@@ -153,7 +153,7 @@ Proof. Admitted.
 (** 引理：若 Σ_{i=0}^n c_i y^i = 0 对所有 y 成立，则所有 c_i = 0 *)
 Lemma all_coeffs_zero : forall n (c : nat -> R),
     (forall y, sum0 (fun i => c i * y^i) n = 0) ->
-    forall i, i <= n -> c i = 0.
+    forall i : nat, i <= n -> c i = 0.
 Proof. Admitted.
 
 (** 先证：∏_{k=1}^n (y-r_k) 的系数满足 b_n=1, b_{n-1}=-Σr_k *)
