@@ -22,10 +22,16 @@ Lemma prod1_has_zero : forall (f : nat -> R) (n k : nat), 1 <= k <= n -> f k = 0
 Proof.
   intros f n k H Hfk.
   induction n.
-  - exfalso. lra.
+  - exfalso.
+    assert (H1 : 0 <= INR k). apply le_INR. lia.
+    assert (H2 : INR k <= 0). lra.
+    assert (H3 : INR k = 0). lra.
+    assert (H4 : k = 0). apply INR_eq. lra.
+    lra.
   - destruct (Nat.eq_dec k (S n)).
     + subst. simpl. rewrite Hfk. ring.
-    + assert (Hk : k <= n). lra.
+    + assert (Hk : k <= n).
+      { apply INR_le. lra. }
       simpl. rewrite IHn; [|lra|exact Hfk]. ring.
 Qed.
 
@@ -48,7 +54,9 @@ Lemma sum1_lt : forall (f g : nat -> R) (n : nat), 1 <= n ->
 Proof.
   intros f g n Hn H.
   induction n.
-  - exfalso. lra.
+  - exfalso.
+    assert (H1 : 1 <= INR 0). lra.
+    simpl in H1. lra.
   - simpl.
     destruct n.
     + apply H. lra.
