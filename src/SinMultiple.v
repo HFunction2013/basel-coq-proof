@@ -21,12 +21,12 @@ Open Scope R_scope.
 Fixpoint Q (n : nat) (y : R) : R :=
   match n with
   | O => 1
-  | S n' => (1 - 2*y) * Q n' y + 2*(1-y) * R n' y
+  | S n' => (1 - 2*y) * Q n' y + 2*(1-y) * Rpoly n' y
   end
-with R (n : nat) (y : R) : R :=
+with Rpoly (n : nat) (y : R) : R :=
   match n with
   | O => 1
-  | S n' => (1 - 2*y) * R n' y - 2*y * Q n' y
+  | S n' => (1 - 2*y) * Rpoly n' y - 2*y * Q n' y
   end.
 
 (* ====================================================================== *)
@@ -34,7 +34,7 @@ with R (n : nat) (y : R) : R :=
 
 Theorem sin_cos_multiple_angle : forall (n : nat) theta,
     sin ((2 * INR n + 1) * theta) = sin theta * Q n (sin theta^2) /\
-    cos ((2 * INR n + 1) * theta) = cos theta * R n (sin theta^2).
+    cos ((2 * INR n + 1) * theta) = cos theta * Rpoly n (sin theta^2).
 Proof. Admitted.
 
 Corollary sin_multiple_angle : forall (n : nat) theta,
@@ -44,7 +44,7 @@ Proof. Admitted.
 (* ====================================================================== *)
 (** ** Q_n(0) 和 R_n(0) *)
 
-Lemma R_at_zero : forall (n : nat), R n 0 = 1.
+Lemma R_at_zero : forall (n : nat), Rpoly n 0 = 1.
 Proof. Admitted.
 
 Lemma Q_at_zero : forall (n : nat), Q n 0 = 2 * INR n + 1.
@@ -53,13 +53,13 @@ Proof. Admitted.
 (* ====================================================================== *)
 (** ** Q_n, R_n 都是多项式 *)
 
-Lemma Q_R_is_poly : forall (n : nat), is_poly n (Q n) /\ is_poly n (R n).
+Lemma Q_R_is_poly : forall (n : nat), is_poly n (Q n) /\ is_poly n (Rpoly n).
 Proof. Admitted.
 
 Corollary Q_is_poly : forall (n : nat), is_poly n (Q n).
 Proof. Admitted.
 
-Corollary R_is_poly : forall (n : nat), is_poly n (R n).
+Corollary R_is_poly : forall (n : nat), is_poly n (Rpoly n).
 Proof. Admitted.
 
 (* ====================================================================== *)
@@ -84,7 +84,7 @@ Proof. Admitted.
 Theorem Q_R_coeff : forall (n : nat),
     (exists Tq, (forall y, Q n y = (2*INR n+1) +
         (-2*INR n*(INR n+1)*(2*INR n+1)/3)*y + y^2*Tq y) /\ is_poly n Tq) /\
-    (exists Tr, (forall y, R n y = 1 +
+    (exists Tr, (forall y, Rpoly n y = 1 +
         (-2*INR n*(INR n+1))*y + y^2*Tr y) /\ is_poly n Tr).
 Proof. Admitted.
 
