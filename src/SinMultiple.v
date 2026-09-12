@@ -41,7 +41,7 @@ Proof.
   - intros theta.
     destruct (IHn theta) as [Hsin Hcos].
     split.
-    + replace (2 * INR (S n) + 1) with (2 * INR n + 1 + 2) by (simpl; ring).
+    + replace (2 * INR (S n) + 1) with (2 * INR n + 1 + 2) by (rewrite INR_S; ring).
       have H : sin ((2 * INR n + 1 + 2) * theta) =
                  sin ((2 * INR n + 1) * theta + 2 * theta).
       { f_equal; ring. }
@@ -52,7 +52,7 @@ Proof.
       have Hsc2 : cos theta^2 = 1 - sin theta^2.
       { have H : sin theta^2 + cos theta^2 = 1 by apply sin_sq. nra. }
       rewrite Hsc2. ring.
-    + replace (2 * INR (S n) + 1) with (2 * INR n + 1 + 2) by (simpl; ring).
+    + replace (2 * INR (S n) + 1) with (2 * INR n + 1 + 2) by (rewrite INR_S; ring).
       have H : cos ((2 * INR n + 1 + 2) * theta) =
                  cos ((2 * INR n + 1) * theta + 2 * theta).
       { f_equal; ring. }
@@ -200,7 +200,7 @@ Proof.
         have Hcalc : (1 - 2*y)*((2*INR n+1) + (-2*INR n*(INR n+1)*(2*INR n+1)/3)*y + y^2*Tq y)
           + 2*(1-y)*(1 + (-2*INR n*(INR n+1))*y + y^2*Tr y)
           = (2*INR (S n)+1) + (-2*INR (S n)*(INR (S n)+1)*(2*INR (S n)+1)/3)*y + y^2*Tq' y.
-        { unfold Tq'; simpl; field; ring_simplify.
+        { unfold Tq'; simpl; repeat rewrite INR_S; field; ring_simplify.
           (* 验证 y 的系数：
              左边 = -2(2n+1) + [-2n(n+1)(2n+1)/3] + 2[-2n(n+1)] - 2
              右边 = -2(n+1)(n+2)(2n+3)/3
@@ -208,7 +208,7 @@ Proof.
           have Hcoeff : (-2*(2*INR n+1) + (-2*INR n*(INR n+1)*(2*INR n+1)/3)
                         + 2*(-2*INR n*(INR n+1)) - 2)
                        = (-2*INR (S n)*(INR (S n)+1)*(2*INR (S n)+1)/3).
-          { simpl; field; ring. }
+          { repeat rewrite INR_S; field; ring. }
           lra. }
         exact Hcalc.
       * (* Tq' 是多项式：由 Tq, Tr, 常数, y 经 +,-,* 组成 *)
@@ -236,10 +236,10 @@ Proof.
         have Hcalc : (1 - 2*y)*(1 + (-2*INR n*(INR n+1))*y + y^2*Tr y)
           - 2*y*((2*INR n+1) + (-2*INR n*(INR n+1)*(2*INR n+1)/3)*y + y^2*Tq y)
           = 1 + (-2*INR (S n)*(INR (S n)+1))*y + y^2*Tr' y.
-        { unfold Tr'; simpl; field; ring_simplify.
+        { unfold Tr'; simpl; repeat rewrite INR_S; field; ring_simplify.
           have Hcoeff : (-2 + (-2*INR n*(INR n+1)) - 2*(2*INR n+1))
                        = (-2*INR (S n)*(INR (S n)+1)).
-          { simpl; field; ring. }
+          { repeat rewrite INR_S; field; ring. }
           lra. }
         exact Hcalc.
       * (* Tr' 是多项式 *)
