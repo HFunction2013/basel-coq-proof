@@ -25,8 +25,8 @@ Proof.
   - exfalso.
     destruct H as [Hle1 Hle0].
     assert (Hk : k = 0). { apply Nat.le_0_r. exact Hle0. }
-    subst.
-    lia.
+    rewrite Hk in Hle1.
+    exact (Nat.nle_succ_0 0 Hle1).
   - destruct (Nat.eq_dec k (S n)).
     + subst. simpl. rewrite Hfk. ring.
     + assert (Hk : (k <= n)%nat). lia.
