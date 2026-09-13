@@ -24,9 +24,9 @@ Proof.
   induction n.
   - exfalso.
     destruct H as [Hle1 Hle0].
-    assert (Hk : k = O). { apply Nat.le_0_r. exact Hle0. }
-    rewrite Hk in Hle1.
-    exact (Nat.nle_succ_0 O Hle1).
+    destruct k.
+    + inversion Hle1.
+    + inversion Hle0.
   - destruct (Nat.eq_dec k (S n)).
     + subst. simpl. rewrite Hfk. ring.
     + assert (Hk : (k <= n)%nat). lia.
