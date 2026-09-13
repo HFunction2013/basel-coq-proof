@@ -26,7 +26,7 @@ Proof.
     destruct H as [Hle1 Hle0].
     destruct k.
     { simpl in Hle1. lra. }
-    { inversion Hle0. }
+    { assert (Hcontra : ~ (S k <= 0)%nat) by exact (Nat.nle_succ_0 k). contradiction. }
   - destruct (Nat.eq_dec k (S n)).
     + subst. simpl. rewrite Hfk. ring.
     + assert (Hk : (k <= n)%nat). lia.
