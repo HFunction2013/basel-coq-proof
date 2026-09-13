@@ -25,8 +25,8 @@ Proof.
   - exfalso.
     destruct H as [Hle1 Hle0].
     destruct k.
-    { lra. }
-    { exact (Nat.nle_succ_0 k Hle0). }
+    { simpl in Hle1. lra. }
+    { inversion Hle0. }
   - destruct (Nat.eq_dec k (S n)).
     + subst. simpl. rewrite Hfk. ring.
     + assert (Hk : (k <= n)%nat). lia.
