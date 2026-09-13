@@ -25,7 +25,7 @@ Proof.
   - exfalso.
     destruct H as [Hle1 Hle0].
     destruct k.
-    { exact (Nat.nle_succ_0 O Hle1). }
+    { lra. }
     { exact (Nat.nle_succ_0 k Hle0). }
   - destruct (Nat.eq_dec k (S n)).
     + subst. simpl. rewrite Hfk. ring.
